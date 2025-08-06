@@ -1,238 +1,137 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Iniciar Sesión / Registro</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Panel Veterinaria</title>
   <style>
-    * { box-sizing: border-box; }
     body {
-      font-family: 'Arial', sans-serif;
-      background: #f6f5f7;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      font-family: Arial, sans-serif;
       margin: 0;
+      padding: 0;
     }
-    .container {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 14px 28px rgba(0,0,0,0.25),
-                  0 10px 10px rgba(0,0,0,0.22);
-      position: relative;
-      overflow: hidden;
-      width: 768px;
-      max-width: 100%;
-      min-height: 480px;
-    }
-    .form-container {
-      position: absolute;
-      top: 0;
-      height: 100%;
-      transition: all 0.6s ease-in-out;
-    }
-    .sign-in-container {
-      left: 0;
-      width: 50%;
-      z-index: 2;
-    }
-    .sign-up-container {
-      left: 0;
-      width: 50%;
-      opacity: 0;
-      z-index: 1;
-    }
-    .container.right-panel-active .sign-in-container {
-      transform: translateX(100%);
-    }
-    .container.right-panel-active .sign-up-container {
-      transform: translateX(100%);
-      opacity: 1;
-      z-index: 5;
-    }
-    form {
-      background: #ffffff;
-      display: flex;
-      flex-direction: column;
-      padding: 0 50px;
-      height: 100%;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-    input {
-      background: #eee;
-      border: none;
-      padding: 12px 15px;
-      margin: 8px 0;
-      width: 100%;
-    }
-    button {
-      border: none;
-      padding: 12px 45px;
-      margin-top: 10px;
-      background-color: #ff4b2b;
+    nav {
+      background: #28a745;
       color: white;
-      font-size: 14px;
-      cursor: pointer;
-      border-radius: 20px;
-    }
-    .ghost {
-      background-color: transparent;
-      border: 2px solid white;
-    }
-    .overlay-container {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      width: 50%;
-      height: 100%;
-      overflow: hidden;
-      transition: transform 0.6s ease-in-out;
-      z-index: 100;
-    }
-    .overlay {
-      background: linear-gradient(to right, #ff4b2b, #ff416c);
-      color: #ffffff;
-      position: relative;
-      left: -100%;
-      height: 100%;
-      width: 200%;
-      transform: translateX(0);
-      transition: transform 0.6s ease-in-out;
+      padding: 1rem;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-    }
-    .container.right-panel-active .overlay-container {
-      transform: translateX(-100%);
-    }
-    .overlay-panel {
-      display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 0 40px;
-      position: absolute;
-      top: 0;
-      height: 100%;
-      width: 50%;
     }
-    .overlay-left {
-      left: 0;
+    nav button {
+      background: red;
+      border: none;
+      color: white;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
     }
-    .overlay-right {
-      right: 0;
+    main {
+      padding: 1rem;
+    }
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
-  <div class="container" id="container">
-    <div class="form-container sign-up-container">
-      <form onsubmit="register(event)">
-        <h2>Crea tu Cuenta</h2>
-        <input type="text" placeholder="Nombre" id="regNombre" required />
-        <input type="email" placeholder="Email" id="regEmail" required />
-        <input type="password" placeholder="Contraseña" id="regPassword" required />
-        <button type="submit">Registrar</button>
-      </form>
-    </div>
-    <div class="form-container sign-in-container">
-      <form onsubmit="login(event)">
-        <h2>Iniciar Sesión</h2>
-        <input type="email" placeholder="Email" id="loginEmail" required />
-        <input type="password" placeholder="Contraseña" id="loginPassword" required />
-        <button type="submit">Iniciar Sesión</button>
-      </form>
-    </div>
-    <div class="overlay-container">
-      <div class="overlay">
-        <div class="overlay-panel overlay-left">
-          <h2>¿Ya tenés cuenta?</h2>
-          <p>Iniciá sesión con tu cuenta</p>
-          <button class="ghost" onclick="toggle(false)">Iniciar Sesión</button>
-        </div>
-        <div class="overlay-panel overlay-right" id="overlayRightContent">
-          <h2>¿Sos nuev@?</h2>
-          <p>Creá tu cuenta para empezar</p>
-          <button class="ghost" onclick="toggle(true)">Registrar</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <nav>
+    <div>🐶 Veterinaria Panel</div>
+    <button onclick="logout()">Cerrar sesión</button>
+  </nav>
+
+  <main>
+    <h2 id="welcome"></h2>
+    
+    <section id="userSection" class="hidden">
+      <h3>Mis Mascotas</h3>
+      <div id="mascotasContainer"></div>
+      <h3>Solicitar Turno</h3>
+      <button onclick="solicitarTurno()">Pedir turno</button>
+    </section>
+
+    <section id="adminSection" class="hidden">
+      <h3>Usuarios Registrados</h3>
+      <div id="usuariosContainer"></div>
+
+      <h3>Todos los Turnos</h3>
+      <div id="turnosContainer"></div>
+    </section>
+  </main>
 
   <script>
-    function toggle(isRegister) {
-      const container = document.getElementById('container');
-      const overlayRight = document.getElementById('overlayRightContent');
-      if (isRegister) {
-        container.classList.add('right-panel-active');
-        overlayRight.innerHTML = `
-          <h2>¿Ya tenés cuenta?</h2>
-          <p>Iniciá sesión</p>
-          <button class="ghost" onclick="toggle(false)">Iniciar Sesión</button>
-        `;
+    async function getUserData() {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        window.location.href = "index.html";
+        return;
+      }
+
+      const res = await fetch("http://localhost/crud/usuarios/me", {
+        headers: {
+          "Authorization": "Bearer " + token
+        }
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        document.getElementById("welcome").innerText = "Bienvenido, " + data.nombre;
+        if (data.rol === "admin") {
+          document.getElementById("adminSection").classList.remove("hidden");
+          cargarUsuarios();
+          cargarTurnos();
+        } else {
+          document.getElementById("userSection").classList.remove("hidden");
+          cargarMascotas(data.id);
+        }
       } else {
-        container.classList.remove('right-panel-active');
-        overlayRight.innerHTML = `
-          <h2>¿Sos nuev@?</h2>
-          <p>Creá tu cuenta para empezar</p>
-          <button class="ghost" onclick="toggle(true)">Registrar</button>
-        `;
+        logout();
       }
     }
 
-    async function login(event) {
-      event.preventDefault();
-      const email = document.getElementById("loginEmail").value;
-      const password = document.getElementById("loginPassword").value;
-
-      try {
-        const res = await fetch("http://localhost/crud/usuarios/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password })
-        });
-
-        const data = await res.json();
-
-        if (res.ok && data.token) {
-          localStorage.setItem("token", data.token);
-          window.location.href = "index.html";
-        } else {
-          alert(data.message || "Error al iniciar sesión");
-        }
-      } catch (e) {
-        alert("Error de red o servidor");
-      }
+    function logout() {
+      localStorage.removeItem("token");
+      window.location.href = "index.html";
     }
 
-    async function register(event) {
-      event.preventDefault();
-      const nombre = document.getElementById("regNombre").value;
-      const email = document.getElementById("regEmail").value;
-      const password = document.getElementById("regPassword").value;
-
-      try {
-        const res = await fetch("http://localhost/crud/usuarios/registro", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nombre, email, password })
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-          alert("Usuario registrado con éxito. Ahora iniciá sesión.");
-          toggle(false);
-        } else {
-          alert(data.message || "Error al registrar");
-        }
-      } catch (e) {
-        alert("Error de red o servidor");
-      }
+    function solicitarTurno() {
+      alert("Funcionalidad de turnos por implementar");
     }
+
+    function cargarMascotas(userId) {
+      fetch("http://localhost/crud/mascotas/usuario/" + userId, {
+        headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+      })
+      .then(res => res.json())
+      .then(data => {
+        const cont = document.getElementById("mascotasContainer");
+        cont.innerHTML = data.map(m => `<p>${m.nombre} (${m.tipo})</p>`).join("");
+      });
+    }
+
+    function cargarUsuarios() {
+      fetch("http://localhost/crud/usuarios/", {
+        headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+      })
+      .then(res => res.json())
+      .then(data => {
+        const cont = document.getElementById("usuariosContainer");
+        cont.innerHTML = data.map(u => `<p>${u.nombre} (${u.email}) - ${u.rol}</p>`).join("");
+      });
+    }
+
+    function cargarTurnos() {
+      fetch("http://localhost/crud/turnos/", {
+        headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+      })
+      .then(res => res.json())
+      .then(data => {
+        const cont = document.getElementById("turnosContainer");
+        cont.innerHTML = data.map(t => `<p>Turno de ${t.usuario_nombre} para ${t.fecha}</p>`).join("");
+      });
+    }
+
+    getUserData();
   </script>
 </body>
 </html>

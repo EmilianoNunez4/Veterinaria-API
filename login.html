@@ -1,0 +1,238 @@
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión / Registro</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f6f5f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 14px 28px rgba(0,0,0,0.25),
+                  0 10px 10px rgba(0,0,0,0.22);
+      position: relative;
+      overflow: hidden;
+      width: 768px;
+      max-width: 100%;
+      min-height: 480px;
+    }
+    .form-container {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      transition: all 0.6s ease-in-out;
+    }
+    .sign-in-container {
+      left: 0;
+      width: 50%;
+      z-index: 2;
+    }
+    .sign-up-container {
+      left: 0;
+      width: 50%;
+      opacity: 0;
+      z-index: 1;
+    }
+    .container.right-panel-active .sign-in-container {
+      transform: translateX(100%);
+    }
+    .container.right-panel-active .sign-up-container {
+      transform: translateX(100%);
+      opacity: 1;
+      z-index: 5;
+    }
+    form {
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      padding: 0 50px;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    input {
+      background: #eee;
+      border: none;
+      padding: 12px 15px;
+      margin: 8px 0;
+      width: 100%;
+    }
+    button {
+      border: none;
+      padding: 12px 45px;
+      margin-top: 10px;
+      background-color: #ff4b2b;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 20px;
+    }
+    .ghost {
+      background-color: transparent;
+      border: 2px solid white;
+    }
+    .overlay-container {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 50%;
+      height: 100%;
+      overflow: hidden;
+      transition: transform 0.6s ease-in-out;
+      z-index: 100;
+    }
+    .overlay {
+      background: linear-gradient(to right, #ff4b2b, #ff416c);
+      color: #ffffff;
+      position: relative;
+      left: -100%;
+      height: 100%;
+      width: 200%;
+      transform: translateX(0);
+      transition: transform 0.6s ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .container.right-panel-active .overlay-container {
+      transform: translateX(-100%);
+    }
+    .overlay-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 40px;
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 50%;
+    }
+    .overlay-left {
+      left: 0;
+    }
+    .overlay-right {
+      right: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="container">
+    <div class="form-container sign-up-container">
+      <form onsubmit="register(event)">
+        <h2>Crea tu Cuenta</h2>
+        <input type="text" placeholder="Nombre" id="regNombre" required />
+        <input type="email" placeholder="Email" id="regEmail" required />
+        <input type="password" placeholder="Contraseña" id="regPassword" required />
+        <button type="submit">Registrar</button>
+      </form>
+    </div>
+    <div class="form-container sign-in-container">
+      <form onsubmit="login(event)">
+        <h2>Iniciar Sesión</h2>
+        <input type="email" placeholder="Email" id="loginEmail" required />
+        <input type="password" placeholder="Contraseña" id="loginPassword" required />
+        <button type="submit">Iniciar Sesión</button>
+      </form>
+    </div>
+    <div class="overlay-container">
+      <div class="overlay">
+        <div class="overlay-panel overlay-left">
+          <h2>¿Ya tenés cuenta?</h2>
+          <p>Iniciá sesión con tu cuenta</p>
+          <button class="ghost" onclick="toggle(false)">Iniciar Sesión</button>
+        </div>
+        <div class="overlay-panel overlay-right" id="overlayRightContent">
+          <h2>¿Sos nuev@?</h2>
+          <p>Creá tu cuenta para empezar</p>
+          <button class="ghost" onclick="toggle(true)">Registrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggle(isRegister) {
+      const container = document.getElementById('container');
+      const overlayRight = document.getElementById('overlayRightContent');
+      if (isRegister) {
+        container.classList.add('right-panel-active');
+        overlayRight.innerHTML = `
+          <h2>¿Ya tenés cuenta?</h2>
+          <p>Iniciá sesión</p>
+          <button class="ghost" onclick="toggle(false)">Iniciar Sesión</button>
+        `;
+      } else {
+        container.classList.remove('right-panel-active');
+        overlayRight.innerHTML = `
+          <h2>¿Sos nuev@?</h2>
+          <p>Creá tu cuenta para empezar</p>
+          <button class="ghost" onclick="toggle(true)">Registrar</button>
+        `;
+      }
+    }
+
+    async function login(event) {
+      event.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      try {
+        const res = await fetch("http://localhost/crud/usuarios/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.token) {
+          localStorage.setItem("token", data.token);
+          window.location.href = "index.html";
+        } else {
+          alert(data.message || "Error al iniciar sesión");
+        }
+      } catch (e) {
+        alert("Error de red o servidor");
+      }
+    }
+
+    async function register(event) {
+      event.preventDefault();
+      const nombre = document.getElementById("regNombre").value;
+      const email = document.getElementById("regEmail").value;
+      const password = document.getElementById("regPassword").value;
+
+      try {
+        const res = await fetch("http://localhost/crud/usuarios/registro", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nombre, email, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          alert("Usuario registrado con éxito. Ahora iniciá sesión.");
+          toggle(false);
+        } else {
+          alert(data.message || "Error al registrar");
+        }
+      } catch (e) {
+        alert("Error de red o servidor");
+      }
+    }
+  </script>
+</body>
+</html>
