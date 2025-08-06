@@ -1,0 +1,393 @@
+{
+	"info": {
+		"_postman_id": "904edfe6-a351-471e-b953-06198ad9e3f1",
+		"name": "CRUD API Slim + JWT",
+		"description": "Colección para probar endpoints de usuarios y productos.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30105707"
+	},
+	"item": [
+		{
+			"name": "Registrar usuario",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"test3@gmail.com\",\n  \"password\": \"123456\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost/crud/usuarios/registro",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"crud",
+						"usuarios",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+        {
+            "name": "Registro de Admin",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"nombre\": \"Admin Juan\",\n  \"email\": \"admin@gmail.com\",\n  \"password\": \"admin123\"\n}"
+                },
+                "url": {
+                    "raw": "http://localhost/crud/usuarios/admin",
+                    "protocol": "http",
+                    "host": ["localhost"],
+                    "path": ["crud", "usuarios", "admin"]
+                }
+            }
+        },
+		{
+			"name": "Login usuario",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"test@gmail.com\",\n  \"password\": \"123456\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost/crud/usuarios/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"crud",
+						"usuarios",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+        {
+            "name": "Listar Usuarios (Admin)",
+            "request": {
+                "method": "GET",
+                "header": [
+                { 
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}" 
+                }
+                ],
+                "url": {
+                "raw": "http://localhost/crud/usuarios/todos",
+                "protocol": "http",
+                "host": [
+                    "localhost"
+                ],
+                "path": 
+                [
+                    "crud",
+                    "usuarios",
+                    "todos"
+                ]
+                }
+            }
+        },
+        {
+            "name": "Agregar Mascota",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"nombre\": \"Firulais\",\n  \"especie\": \"Perro\"\n}"
+                },
+                "url": {
+                    "raw": "http://localhost/crud/mascotas/",
+                    "protocol": "http",
+                    "host": ["localhost"],
+                    "path": [
+						"crud",
+						"mascotas",
+						"agregar"
+					]
+                }
+            }
+        },
+        {
+            "name": "Ver todas las mascotas (solo admin)",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+						"key": "Authorization", 
+						"value": "Bearer {{token}}"
+					}
+                ],
+                "url": {
+                    "raw": "http://localhost/crud/mascotas/",
+                    "protocol": "http",
+                    "host": [
+						"localhost"
+					],
+                    "path": [
+						"crud", 
+						"mascotas", 
+						""
+					]
+                }
+            }
+        },
+        {
+            "name": "Ver mis mascotas User",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+						"key": "Authorization", 
+						"value": "Bearer {{token}}"
+					}
+                ],
+                "url": {
+                    "raw": "http://localhost/crud/mascotas/mis-mascotas",
+                    "protocol": "http",
+                    "host": [
+						"localhost"
+					],
+                    "path": [
+						"crud",
+						"mascotas",
+						"mis-mascotas"
+					]
+                }
+            }
+        },
+        {
+            "name": "Ver Turnos Disponibles",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"fecha\": \"2025-07-01\"\n}"
+                },
+                "url": {
+                    "raw": "http://localhost/crud/turnos/disponibles",
+                    "protocol": "http",
+                    "host": ["localhost"],
+                    "path": [
+						"crud",
+						"turnos",
+						"disponibles"]
+                }
+            }
+        },
+        {
+            "name": "Habilitar Turnos por rango de fechas (Admin)",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"fecha_inicio\": \"2025-07-01\",\n  \"fecha_fin\": \"2025-07-10\"\n}"
+                },
+                "url": {
+                    "raw": "http://localhost/crud/turnos/habilitar-turnos",
+                    "protocol": "http",
+                    "host": ["localhost"],
+                    "path": [
+						"crud",
+						"turnos",
+						"habilitar"
+					]
+                }
+            }
+        },
+        {
+            "name": "Solicitar Turno",
+            "request": {
+                "method": "POST",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{token}}" },
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"turno_disponible_id\": 55,\n    \"mascota_id\": 2,\n    \"descripcion\": \"motivo de la consulta\"\n}"
+                },
+                "url": { "raw": "http://localhost/crud/turnos/solicitar", "protocol": "http", "host": ["localhost"], "path": ["crud", "turnos", "solicitar"] }
+            }
+        },
+        {
+            "name": "Ver Mis Turnos",
+            "request": {
+                "method": "GET",
+                "header": [
+                    { 
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+                ],
+                "url": {
+					"raw": "http://localhost/crud/turnos/mis-turnos",
+					"protocol": "http",
+					"host": ["localhost"],
+					"path": [
+						"crud",
+						"turnos",
+						"mis-turnos"
+					]
+				}
+            }
+        },
+        {
+            "name": "Ver Todos los Turnos (Admin)",
+            "request": {
+                "method": "GET",
+                "header": [
+                    { 
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+                ],
+                "url": {
+					"raw": "http://localhost/crud/turnos/todos",
+					"protocol": "http",
+					"host": ["localhost"],
+					"path": [
+						"crud",
+						"turnos",
+						"todos"
+					]
+				}
+            }
+        },
+        {
+            "name": "Cancelar Turno",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{token}}" },
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"id\": 1,\n  \"mascota_id\": 2,\n  \"descripcion\": \"motivo de cancelacion\"\n}"
+                },
+                "url": { "raw": "http://localhost/crud/turnos/cancelar",
+                    "protocol": "http",
+                    "host": ["localhost"],
+                    "path": [
+                        "crud",
+                        "turnos",
+                        "cancelar"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Cambiar Estado Turno (Admin)",
+            "request": {
+                "method": "PATCH",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{token}}" },
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"id\": 1,\n  \"estado\": \"asistido\",\n  \"costo\": 600.00\n}"
+                },
+                "url": { "raw": "http://localhost/crud/turnos/cambiar-estado/",
+                    "protocol": "http",
+                    "host": ["localhost"],
+                    "path": [
+                        "crud",
+                        "turnos",
+                        "cambiar-estado",
+                        "1"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Deshabilitar Día Completo (Admin)",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{token}}" },
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"fecha\": \"2025-07-04\"\n}"
+                },
+                "url": { "raw": "http://localhost/crud/turnos/cancelar-dia",
+                    "protocol": "http",
+                    "host": ["localhost"],
+                    "path": [
+                        "crud",
+                        "turnos",
+                        "cancelar-dia"
+                    ]
+                }
+            }
+        }
+    ],
+
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}

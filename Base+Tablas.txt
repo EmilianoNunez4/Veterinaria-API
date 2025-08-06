@@ -1,0 +1,53 @@
+///Base
+
+CREATE DATABASE IF NOT EXISTS crud_db;
+USE crud_db;
+
+CREATE TABLE IF NOT EXISTS usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    rol ENUM('user', 'admin') DEFAULT 'user',
+    fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS mascotas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    especie VARCHAR(50),
+    fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+);
+
+CREATE TABLE IF NOT EXISTS turnos_disponibles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    fecha DATE NOT NULL,
+    hora TIME NOT NULL,
+    habilitado BOOLEAN DEFAULT TRUE,
+    disponible BOOLEAN DEFAULT TRUE,
+    UNIQUE (fecha, hora)
+);
+
+CREATE TABLE IF NOT EXISTS turnos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    mascota_id INT NOT NULL,
+    turno_disponible_id INT NOT NULL,
+    estado ENUM('pendiente', 'asistido', 'ausente', 'cancelado') DEFAULT 'pendiente',
+    costo DECIMAL(8,2),
+    descripcion TEXT,
+    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+    FOREIGN KEY (mascota_id) REFERENCES mascotas(id),
+    FOREIGN KEY (turno_disponible_id) REFERENCES turnos_disponibles(id)
+);
+
+
+https://getcomposer.org/Composer-Setup.exe
+
+composer init
+composer require slim/slim slim/psr7 
+composer require vlucas/phpdotenv
+composer require firebase/php-jwt
