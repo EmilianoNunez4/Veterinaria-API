@@ -153,7 +153,7 @@
           <p>Iniciá sesión con tu cuenta</p>
           <button class="ghost" onclick="toggle(false)">Iniciar Sesión</button>
         </div>
-        <div class="overlay-panel overlay-right">
+        <div class="overlay-panel overlay-right" id="overlayRightContent">
           <h2>¿Sos nuev@?</h2>
           <p>Creá tu cuenta para empezar</p>
           <button class="ghost" onclick="toggle(true)">Registrar</button>
@@ -165,10 +165,21 @@
   <script>
     function toggle(isRegister) {
       const container = document.getElementById('container');
+      const overlayRight = document.getElementById('overlayRightContent');
       if (isRegister) {
         container.classList.add('right-panel-active');
+        overlayRight.innerHTML = `
+          <h2>¿Ya tenés cuenta?</h2>
+          <p>Iniciá sesión</p>
+          <button class="ghost" onclick="toggle(false)">Iniciar Sesión</button>
+        `;
       } else {
         container.classList.remove('right-panel-active');
+        overlayRight.innerHTML = `
+          <h2>¿Sos nuev@?</h2>
+          <p>Creá tu cuenta para empezar</p>
+          <button class="ghost" onclick="toggle(true)">Registrar</button>
+        `;
       }
     }
 
@@ -178,7 +189,7 @@
       const password = document.getElementById("loginPassword").value;
 
       try {
-        const res = await fetch("http://localhost/crud/login", {
+        const res = await fetch("http://localhost/crud/usuarios/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password })
@@ -204,7 +215,7 @@
       const password = document.getElementById("regPassword").value;
 
       try {
-        const res = await fetch("http://localhost/crud/usuarios", {
+        const res = await fetch("http://localhost/crud/usuarios/registro", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ nombre, email, password })

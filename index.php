@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 
 $app->group('/usuarios', function (RouteCollectorProxy $group) {
-    $group->post('/', \UserController::class . ':Registro');
+    $group->post('/registro', \UserController::class . ':Registro');
     $group->post('/login', \UserController::class . ':Login');
     $group->post('/crear-pimer-admin', \UserController::class . ':CrearAdmin');
     $group->post('/admin', \UserController::class . ':CrearAdmin')->add('AuthJWT:VerificarAdmin');
