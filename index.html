@@ -12,19 +12,11 @@
   <nav>
     <div class="logo">
       <!-- Icono SVG huella -->
-      <span class="paw-icon">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="7" cy="7" r="3"/>
-          <circle cx="17" cy="7" r="3"/>
-          <ellipse cx="12" cy="17" rx="5" ry="4"/>
-          <circle cx="5" cy="15" r="2"/>
-          <circle cx="19" cy="15" r="2"/>
-        </svg>
-      </span>
-      <span class="logo-text">Veterinaria</span>
+      <img src="src/logovet-Photoroom.png" alt="logo-empresa" class="logimg">
+      <span class="logo-text" style="font-weight: bold;">Veterinaria San Jorge</span>
     </div>
     <ul>
-      <li><a href="#">Inicio</a></li>
+      <li><a href="index.html">Inicio</a></li>
       <li><a href="#mascotas">Mascotas</a></li>
       <li><a href="#turnos">Turnos</a></li>
       <li><a href="#servicios">Servicios</a></li>
@@ -33,163 +25,360 @@
   </nav>
 </header>
 
-  <!-- BANNER PRINCIPAL -->
-<section class="vet-banner" id="emergencias">
+  <!-- HERO / BANNER PRINCIPAL (nuevo: animaciones + overlay + franja de logos) -->
+<section class="hero-hero">
+  <div class="hero-bg" role="img" aria-label="Equipo médico reuniéndose" style="background-image: url('https://images.unsplash.com/photo-1526256262350-7da7584cf5eb?auto=format&fit=crop&w=1600&q=80')"></div>
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content fadeUp">
+    <h1 class="hero-title">¡BIENVENIDOS!</h1>
+    <p class="hero-sub">Atención centrada en tu <strong>Mascota</strong></p>
+    <p class="hero-lead">Somos un equipo de profesionales comprometidos con cada mascota. Atención de calidad, humana y cercana.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href="#turnos">Reservar Turno</a>
+      <a class="btn btn-outline" href="#servicios">Conocé Más</a>
+    </div>
+  </div>
+  <div class="hero-bottom-bar"></div>
+</section>
+
+<section class="vet-banner" id="emergencias" aria-hidden="true" style="display:none;">
   <div class="banner-left">
     <div>
-      <h1><span class="banner-emergencias">EMERGENCIAS</span> <span class="banner-24">24 horas</span></h1>
+      <h1>
+        <span class="banner-emergencias">EMERGENCIAS</span>
+        <span class="banner-24">24 horas</span>
+      </h1>
       <h2>Clínica veterinaria</h2>
       <p class="banner-desc">de mediana y alta complejidad</p>
       <button class="banner-btn">Atención Inmediata</button>
     </div>
   </div>
   <div class="banner-right">
-    <div class="carousel-slideshow">
+    <div class="carousel-slideshow-gradient">
+      <div class="carousel-gradient-bg"></div>
       <div class="carousel-track">
-        <img src="https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&w=600&q=80" alt="Veterinaria Emergencia 1" class="carousel-slide" />
-        <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=600&q=80" alt="Veterinaria Emergencia 2" class="carousel-slide" />
-        <img src="https://images.unsplash.com/photo-1518715308788-300e1aa2e921?auto=format&fit=crop&w=600&q=80" alt="Veterinaria Emergencia 3" class="carousel-slide" />
+        <img src="https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&w=900&q=80" alt="Veterinaria Emergencia 1" class="carousel-slide" />
+        <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=900&q=80" alt="Veterinaria Emergencia 2" class="carousel-slide" />
+        <img src="https://images.unsplash.com/photo-1518715308788-300e1aa2e921?auto=format&fit=crop&w=900&q=80" alt="Veterinaria Emergencia 3" class="carousel-slide" />
       </div>
     </div>
   </div>
 </section>
-<div class="banner-strip">
-  Salas de espera exclusivas para perros y gatos, cómodas y seguras.
-</div>
+
 <script>
-/* Carrusel JS */
-document.addEventListener('DOMContentLoaded', function() {
-  const track = document.querySelector('.carousel-track');
-  const slides = Array.from(document.querySelectorAll('.carousel-slide'));
-  let currentIdx = 0;
-  const slideWidth = slides[0].offsetWidth;
-  const totalSlides = slides.length;
+  
+    // Hero animations: fadeUp on load + slight parallax zoom to simulate movimiento de fondo
+    document.addEventListener('DOMContentLoaded', () => {
+      const hero = document.querySelector('.hero-hero');
+      const bg = document.querySelector('.hero-bg');
+      const fadeEls = document.querySelectorAll('.fadeUp');
+      // activar entrada con delay
+      setTimeout(()=> fadeEls.forEach(el => el.classList.add('show')), 200);
 
-  function goToSlide(idx) {
-    track.style.transform = `translateX(-${idx * slideWidth}px)`;
-  }
-
-  // Responsive fix: update slideWidth on window resize
-  window.addEventListener('resize', () => {
-    const newWidth = slides[0].offsetWidth;
-    track.style.transform = `translateX(-${currentIdx * newWidth}px)`;
-  });
-
-  function nextSlide() {
-    currentIdx = (currentIdx + 1) % totalSlides;
-    goToSlide(currentIdx);
-  }
-
-  setInterval(nextSlide, 4000); // Cambia cada 4 segundos
-  goToSlide(currentIdx);
-});
+      // ligera animación continua del fondo (zoom lento)
+      let scale = 1.02;
+      let dir = 0.00002; // velocidad muy lenta
+      setInterval(() => {
+        scale += dir;
+        if (scale > 1.04 || scale < 1.02) dir *= -1;
+        bg.style.transform = `scale(${scale})`;
+      }, 60);
+    });
+    // Si querés volver a usar el carrusel original, hay script más arriba en el HTML
 </script>
 
-
   <!-- OPCIONES RÁPIDAS -->
-<section class="opciones-rapidas">
-  <div class="opcion-card">
-    <div class="opcion-card-left">
-      <h2 class="opcion-titulo">Registrar Mascota</h2>
-      <p class="opcion-desc">
-        Registrá y gestioná tus mascotas.<br>
-        Lleva el control y accedé a todos sus datos en un solo lugar.
-      </p>
-      <button class="opcion-btn">Agregar Mascota</button>
+<section class="turnos-nuevo-bloque">
+  <div class="turnos-nuevo-options">
+    <div class="turnos-nuevo-option">
+      <h3>RESERVÁ TU TURNO</h3>
+      <p>Reservá tu turno de<br>manera online</p>
+      <a href="#turnos-online" class="turnos-nuevo-btn">Solicitar Turno</a>
     </div>
-    <div class="opcion-card-right">
-      <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Agregar Mascota" />
+    <div class="turnos-nuevo-divider"></div>
+    <div class="turnos-nuevo-option">
+      <h3>PORTAL WEB</h3>
+      <p>Consulte resultados de Análisis<br>y Diagnóstico por Imagen</p>
+      <a href="#portal-web" class="turnos-nuevo-btn">Ir al Portal</a>
+    </div>
+    <div class="turnos-nuevo-divider"></div>
+    <div class="turnos-nuevo-option">
+      <h3>RECETAS ONLINE</h3>
+      <p>A través del sistema de<br>recetas online.</p>
+      <a href="#recetas-online" class="turnos-nuevo-btn">Solicitar Receta</a>
     </div>
   </div>
-  <div class="opcion-card">
-    <div class="opcion-card-left">
-      <h2 class="opcion-titulo">Pedir Turno</h2>
-      <p class="opcion-desc">
-        Solicitá turnos fácil y rápido.<br>
-        Elegí fecha, hora y profesional.
-      </p>
-      <button class="opcion-btn">Solicitar Turno</button>
-    </div>
-    <div class="opcion-card-right">
-      <img src="https://cdn-icons-png.flaticon.com/512/3774/3774299.png" alt="Pedir Turno" />
-    </div>
+  <div class="turnos-nuevo-logos">
+    <img src="src/logovet-Photoroom.png" alt="Clínica Monte Grande" class="logo-mg">
+    <h1 class="vet-san">VETERINARIA SAN JORGE</h1>
   </div>
 </section>
-
 
   <!-- SERVICIOS -->
-  <section class="servicios" id="servicios">
-  <h2>Nuestros Servicios</h2>
-  <div class="servicios-grid">
-    <div class="servicio-card">
-      <span class="servicio-icon">
-        <!-- Icono de consulta médica -->
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="#FF4B2B"><path d="M12 2C6.477 2 2 6.477 2 12a9.99 9.99 0 0 0 6 9.162V17a1 1 0 0 1 2 0v4.162A9.99 9.99 0 0 0 22 12c0-5.523-4.477-10-10-10zm0 18a8.962 8.962 0 0 1-6.363-2.637A7.96 7.96 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8a7.96 7.96 0 0 1-1.637 5.363A8.962 8.962 0 0 1 12 20z"></path></svg>
-      </span>
-      <h3>Consultas generales</h3>
-      <p>Atención médica preventiva y tratamiento de enfermedades.</p>
+<section id="servicios-carousel" class="svc-section">
+  <div class="svc-container">
+    <h2 class="svc-title">NUESTROS SERVICIOS</h2>
+
+    <div class="svc-carousel-wrapper">
+      <button class="svc-arrow prev" aria-label="Anterior" type="button">◀</button>
+
+      <div class="svc-carousel" role="list" aria-live="polite">
+        <!-- Card 1 -->
+        <article class="svc-card" role="listitem">
+          <div class="svc-image" style="background-image:url('src/clinica.jpg')">
+            <div class="svc-overlay">
+              <h3>Consultas y Chequeos</h3>
+              <p>Atención veterinaria general para perros y gatos.</p>
+            </div>
+          </div>
+          <div class="svc-body">
+            <h4>Consultas y Chequeos</h4>
+            <p>Chequeos completos y seguimiento personalizado de la salud de tu mascota.</p>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="svc-card" role="listitem">
+          <div class="svc-image" style="background-image:url('src/clinica.jpg')">
+            <div class="svc-overlay">
+              <h3>Vacunación</h3>
+              <p>Protección contra enfermedades comunes.</p>
+            </div>
+          </div>
+          <div class="svc-body">
+            <h4>Vacunación</h4>
+            <p>Calendario completo con productos de alta calidad.</p>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="svc-card" role="listitem">
+          <div class="svc-image" style="background-image:url('src/clinica.jpg')">
+            <div class="svc-overlay">
+              <h3>Cirugías</h3>
+              <p>Intervenciones seguras y con monitoreo.</p>
+            </div>
+          </div>
+          <div class="svc-body">
+            <h4>Cirugías</h4>
+            <p>Programadas y de urgencia con equipo especializado.</p>
+          </div>
+        </article>
+
+        <!-- Card 4 -->
+        <article class="svc-card" role="listitem">
+          <div class="svc-image" style="background-image:url('src/clinica.jpg')">
+            <div class="svc-overlay">
+              <h3>Peluquería y Estética</h3>
+              <p>Cortes, baños y tratamientos dermatológicos.</p>
+            </div>
+          </div>
+          <div class="svc-body">
+            <h4>Peluquería y Estética</h4>
+            <p>Productos seguros y profesionales especializados.</p>
+          </div>
+        </article>
+
+        <!-- Card 5 -->
+        <article class="svc-card" role="listitem">
+          <div class="svc-image" style="background-image:url('src/clinica.jpg')">
+            <div class="svc-overlay">
+              <h3>Emergencias 24hs</h3>
+              <p>Atención inmediata para lo urgente.</p>
+            </div>
+          </div>
+          <div class="svc-body">
+            <h4>Emergencias 24hs</h4>
+            <p>Equipo listo las 24 horas para atender urgencias.</p>
+          </div>
+        </article>
+
+        <!-- Card 6 -->
+        <article class="svc-card" role="listitem">
+          <div class="svc-image" style="background-image:url('src/clinica.jpg')">
+            <div class="svc-overlay">
+              <h3>Laboratorio Clínico</h3>
+              <p>Análisis rápidos y precisos in-house.</p>
+            </div>
+          </div>
+          <div class="svc-body">
+            <h4>Laboratorio Clínico</h4>
+            <p>Pruebas y resultados confiables para diagnóstico.</p>
+          </div>
+        </article>
+
+      </div>
+      <button class="svc-arrow next" aria-label="Siguiente" type="button">▶</button>
     </div>
-    <div class="servicio-card">
-      <span class="servicio-icon">
-        <!-- Icono de vacunación -->
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="#0AC483"><path d="M18.364 5.636l-1.414-1.414-4.95 4.95-1.414-1.414 4.95-4.95-1.414-1.414-4.95 4.95-2.828-2.829a2 2 0 1 0-2.828 2.828l2.829 2.828 4.95 4.95-1.414 1.414-4.95-4.95-1.414 1.414 4.95 4.95-2.828 2.829a2 2 0 1 0 2.828 2.828l2.829-2.829 4.95-4.95 1.414 1.414-4.95 4.95 1.414 1.414 4.95-4.95 2.828 2.829a2 2 0 1 0 2.828-2.828l-2.829-2.829-4.95-4.95 1.414-1.414 4.95 4.95 1.414-1.414-4.95-4.95z"></path></svg>
-      </span>
-      <h3>Vacunación</h3>
-      <p>Aplicación de vacunas y control de calendario sanitario.</p>
-    </div>
-    <div class="servicio-card">
-      <span class="servicio-icon">
-        <!-- Icono de cirugía -->
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="#FFC300"><path d="M21.71 20.29l-1.42-1.42-2.83 2.83A1.003 1.003 0 0 1 16 22c-.26 0-.52-.1-.71-.29l-8.59-8.59A.996.996 0 0 1 6 12c0-.26.1-.52.29-.71l2.83-2.83-1.42-1.42L2.29 12.29a1 1 0 0 0 0 1.42l8.59 8.59c.39.39 1.03.39 1.42 0l6.59-6.59a1 1 0 0 0 0-1.42z"></path></svg>
-      </span>
-      <h3>Cirugías</h3>
-      <p>Intervenciones quirúrgicas con profesionales capacitados.</p>
-    </div>
-    <div class="servicio-card">
-      <span class="servicio-icon">
-        <!-- Icono de peluquería -->
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="#0099FF"><path d="M19.207 4.793a1 1 0 0 0-1.414 0l-4.95 4.95-1.414-1.414 4.95-4.95a1 1 0 0 0-1.414-1.414l-4.95 4.95-2.829-2.828a2 2 0 1 0-2.828 2.828l2.828 2.829 8.486 8.486a2 2 0 1 0 2.828-2.828l-2.829-2.829-4.95-4.95 1.414-1.414 4.95 4.95 1.414-1.414-4.95-4.95z"></path></svg>
-      </span>
-      <h3>Peluquería</h3>
-      <p>Baños, cortes y tratamientos estéticos para mascotas.</p>
-    </div>
+
   </div>
 </section>
+<script>
+// Script simple para el carousel con flechas. Usa scroll sobre el contenedor.
+(function(){
+  const carousel = document.querySelector('.svc-carousel');
+  const prevBtn = document.querySelector('.svc-arrow.prev');
+  const nextBtn = document.querySelector('.svc-arrow.next');
+  const dotsContainer = document.querySelector('.svc-dots');
+  const cards = carousel ? carousel.querySelectorAll('.svc-card') : [];
 
-  <!-- NUESTRA HISTORIA -->
-<section class="quienes-somos-vet">
-  <div class="quienes-main">
-    <div class="quienes-info">
+  if(!carousel) return;
+
+  function getStep(){
+    // ancho de la card (incluye gap calculado por separacion) --> tomamos offsetWidth + gap
+    const card = carousel.querySelector('.svc-card');
+    if(!card) return carousel.clientWidth;
+    const gap = parseInt(getComputedStyle(carousel).gap) || 24;
+    return card.offsetWidth + gap;
+  }
+
+  nextBtn.addEventListener('click', ()=>{
+    carousel.scrollBy({ left: getStep(), behavior: 'smooth' });
+  });
+  prevBtn.addEventListener('click', ()=>{
+    carousel.scrollBy({ left: -getStep(), behavior: 'smooth' });
+  });
+
+  // Dots (opcional) - generamos según cantidad de pasos (cards per view)
+  function buildDots(){
+    if(!dotsContainer) return;
+    dotsContainer.innerHTML = '';
+    const card = carousel.querySelector('.svc-card');
+    if(!card) return;
+    const cardsPerView = Math.round(carousel.clientWidth / card.offsetWidth);
+    const steps = Math.max(1, Math.ceil(cards.length / cardsPerView));
+    for(let i=0;i<steps;i++){
+      const d = document.createElement('button');
+      d.className = 'svc-dot';
+      d.setAttribute('aria-label','Ir a página '+(i+1));
+      d.addEventListener('click', ()=>{
+        carousel.scrollTo({ left: i * cardsPerView * getStep(), behavior:'smooth' });
+      });
+      dotsContainer.appendChild(d);
+    }
+    updateActiveDot();
+  }
+
+  function updateActiveDot(){
+    const dotElems = dotsContainer ? Array.from(dotsContainer.children) : [];
+    if(dotElems.length===0) return;
+    const scrollLeft = carousel.scrollLeft;
+    const step = getStep();
+    const idx = Math.round(scrollLeft / (step * Math.round(carousel.clientWidth / (carousel.querySelector('.svc-card').offsetWidth||1))));
+    dotElems.forEach((el,i)=> el.classList.toggle('active', i===idx));
+  }
+
+  // actualizar botones enable/disable
+  function updateArrows(){
+    const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+    prevBtn.disabled = carousel.scrollLeft <= 5;
+    nextBtn.disabled = carousel.scrollLeft >= (maxScroll - 5);
+    prevBtn.style.opacity = prevBtn.disabled ? '0.45' : '1';
+    nextBtn.style.opacity = nextBtn.disabled ? '0.45' : '1';
+  }
+
+  // listeners
+  carousel.addEventListener('scroll', ()=>{ updateActiveDot(); updateArrows(); });
+  window.addEventListener('resize', ()=>{ buildDots(); updateArrows(); });
+
+  // inicial
+  buildDots(); updateArrows();
+})();
+</script>
+
+<!-- NUESTRA HISTORIA -->
+<section class="historia-carrusel-bloques">
+  <div class="historia-bloque" id="historiaBloque0">
+    <div class="historia-bloque-img">
+      <img src="https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&w=900&q=80" alt="Perro en veterinaria" />
+    </div>
+    <div class="historia-bloque-content">
       <h2>Te acompañamos con:</h2>
       <ul>
-        <li><span class="check">&#10003;</span> <span class="check-text">Atención médica de Excelencia</span></li>
-        <li><span class="check">&#10003;</span> <span class="check-text">Atención de alta complejidad</span></li>
-        <li><span class="check">&#10003;</span>
-          <span class="check-text">Un equipo humano que prioriza la salud y el bienestar de tu perro o gato</span>
-        </li>
+        <li><span class="check">&#10003;</span> Atención médica de Excelencia</li>
+        <li><span class="check">&#10003;</span> Atención de alta complejidad</li>
+        <li><span class="check">&#10003;</span> Un equipo humano que prioriza la salud y el bienestar de tu perro o gato</li>
       </ul>
-      <p class="quienes-familia">
-        Porque para nosotros, <span>cada paciente es parte de nuestra familia</span>
+      <p class="historia-familia">
+        Porque para nosotros, <strong>cada paciente es parte de nuestra familia</strong>
       </p>
     </div>
-    <div class="quienes-img-group">
-      <div class="quienes-video">
-        <video src="https://www.w3schools.com/html/mov_bbb.mp4" autoplay controls poster="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=600&q=80"></video>
-        <!-- Cambia el video por uno propio si lo deseas -->
-      </div>
+  </div>
+  <div class="historia-bloque" id="historiaBloque1">
+    <div class="historia-bloque-img">
+      <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=900&q=80" alt="Diagnóstico por imágenes" />
+    </div>
+    <div class="historia-bloque-content">
+      <h2 class="historia-titulo">DIAGNÓSTICO POR IMÁGENES.</h2>
+      <h3 class="historia-sub">
+        EQUIPO DE ÚLTIMA GENERACIÓN Y PROFESIONALES CAPACITADOS PARA LOGRAR MAYOR EXACTITUD EN IMÁGENES
+      </h3>
+      <p>
+        Contamos con equipos de última tecnología y un equipo de profesionales capacitados para lograr la mayor precisión y calidad en la toma de imágenes.
+      </p>
     </div>
   </div>
 </section>
+<script>
+let historiaIdx = 0;
+let anteriorIdx = 0;
+
+const bloques = [
+  document.getElementById('historiaBloque0'),
+  document.getElementById('historiaBloque1')
+];
+
+// Mostrar el primero activo desde el inicio
+bloques[0].classList.add('activo');
+
+function mostrarHistoria(nuevoIdx) {
+  if (nuevoIdx === anteriorIdx) return;
+
+  // Determinar dirección
+  const direccion = nuevoIdx > anteriorIdx ? 'izq' : 'der';
+
+  // Bloque que sale
+  const bloqueAnterior = bloques[anteriorIdx];
+  bloqueAnterior.classList.remove('activo', 'saliendo-izq', 'saliendo-der');
+  bloqueAnterior.classList.add(`saliendo-${direccion}`);
+
+  // Limpiar clases al terminar animación
+  bloqueAnterior.addEventListener('transitionend', function limpiar() {
+    bloqueAnterior.classList.remove('saliendo-izq', 'saliendo-der');
+    bloqueAnterior.removeEventListener('transitionend', limpiar);
+  });
+
+  // Bloque que entra
+  const bloqueNuevo = bloques[nuevoIdx];
+  bloqueNuevo.classList.remove('saliendo-izq', 'saliendo-der');
+  bloqueNuevo.classList.add('activo');
+
+  anteriorIdx = nuevoIdx;
+}
+
+// Cambio automático cada 5 segundos
+// Cambio automático cada 8 segundos en lugar de 5
+setInterval(() => {
+  historiaIdx = historiaIdx === bloques.length - 1 ? 0 : historiaIdx + 1;
+  mostrarHistoria(historiaIdx);
+}, 8000);
+
+</script>
+
+  <!-- BARRA   -->
+<article class="barra1"></article>
 
   <!-- FOOTER -->
 <footer class="footer-vet">
   <div class="footer-main">
     <div class="footer-brand">
       <span class="footer-logo">
-        <!-- Icono huella, puedes cambiar por otro SVG -->
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="#ffffff"><circle cx="7" cy="7" r="3"/><circle cx="17" cy="7" r="3"/><ellipse cx="12" cy="17" rx="5" ry="4"/><circle cx="5" cy="15" r="2"/><circle cx="19" cy="15" r="2"/></svg>
+       
       </span>
-      <span class="footer-title">Veterinaria</span>
+      <span class="footer-title">
+        Veterinaria <br>
+        San Jorge</span>
     </div>
     <div class="footer-col">
       <h3>Nosotros</h3>
@@ -239,14 +428,13 @@ document.addEventListener('DOMContentLoaded', function() {
     © 2025 Veterinaria. Todos los derechos reservados.
   </div>
 </footer>
-</footer>
 
   <script>
     function cerrarSesion() {
       localStorage.removeItem("token");
       window.location.href = "login.html";
     }
-    // Aquí luego puedes agregar interacciones JS para mascotas y turnos
   </script>
+
 </body>
 </html>
