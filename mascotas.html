@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mis Mascotas - Veterinaria</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: #f6f5f7;
+      color: #222;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+    .mascotas-dashboard {
+      max-width: 900px;
+      margin: 40px auto 0 auto;
+      padding: 0 24px 60px 24px;
+    }
+    .mascotas-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+    .mascotas-header h1 {
+      font-size: 2.1em;
+      color: #1b2e4b;
+      font-weight: 900;
+      margin: 0;
+    }
+    .btn-primary {
+      background: #2378ff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 28px;
+      font-size: 1.09em;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px #2378ff15;
+      transition: background 0.18s, transform 0.18s;
+    }
+    .btn-primary:hover { background: #44baff; transform: scale(1.04);}
+    .btn-outline {
+      background: #fff;
+      color: #2378ff;
+      border: 1.5px solid #2378ff;
+      border-radius: 7px;
+      padding: 8px 16px;
+      font-size: 1em;
+      font-weight: 700;
+      cursor: pointer;
+      margin-right: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-outline:hover { background: #eaf4ff; }
+    .btn-danger {
+      background: #ff4155;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 8px 16px;
+      font-size: 1em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s;
+    }
+    .btn-danger:hover { background: #e83647; }
+    .mascotas-lista {
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+    }
+    .mascota-card {
+      display: flex;
+      align-items: flex-start;
+      background: #fafdff;
+      border-radius: 16px;
+      box-shadow: 0 2px 18px #2378ff13;
+      padding: 20px 32px;
+      gap: 32px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+    .mascota-foto img {
+      width: 110px;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid #2378ff33;
+      background: #fff;
+    }
+    .mascota-datos, .duenio-datos {
+      min-width: 170px;
+    }
+    .mascota-datos h2 {
+      font-size: 1.22em;
+      color: #2378ff;
+      font-weight: 900;
+      margin: 0 0 12px 0;
+    }
+    .mascota-raza {
+      font-size: 0.85em;
+      font-weight: 700;
+      color: #444;
+    }
+    .mascota-datos ul, .duenio-datos ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 1em;
+      color: #444;
+    }
+    .duenio-datos h3 {
+      font-size: 1em;
+      color: #1b2e4b;
+      font-weight: 900;
+      margin-bottom: 7px;
+    }
+    .mascota-actions {
+      margin-left: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .mascotas-vacio {
+      text-align: center;
+      margin-top: 70px;
+      color: #888;
+    }
+    .mascotas-vacio .btn-primary {
+      margin-top: 16px;
+    }
+    /* FORMULARIO MODAL */
+    .mascota-modal-bg {
+      display: none;
+      position: fixed;
+      z-index: 50;
+      inset: 0;
+      background: rgba(16,32,64,0.36);
+      align-items: center;
+      justify-content: center;
+    }
+    .mascota-modal-bg.activo {
+      display: flex;
+    }
+    .mascota-modal {
+      background: #fff;
+      border-radius: 15px;
+      max-width: 420px;
+      width: 97vw;
+      padding: 36px 30px 24px 30px;
+      box-shadow: 0 8px 32px #2378ff22;
+      position: relative;
+      animation: modalIn .38s cubic-bezier(.3,1.2,.2,1);
+    }
+    @keyframes modalIn {
+      0% {transform: scale(0.94) translateY(32px); opacity: 0;}
+      100% {transform: scale(1) translateY(0); opacity: 1;}
+    }
+    .mascota-modal h2 {
+      margin-top: 0;
+      font-size: 1.4em;
+      color: #2378ff;
+      font-weight: 900;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .mascota-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .mascota-form label {
+      font-weight: 700;
+      color: #1b2e4b;
+      margin-bottom: 3px;
+      font-size: 1.01em;
+    }
+    .mascota-form input,
+    .mascota-form select {
+      border: 1.5px solid #c3d9f7;
+      border-radius: 7px;
+      padding: 9px 12px;
+      font-size: 1em;
+      outline: none;
+      margin-bottom: 2px;
+      background: #fafdff;
+      color: #1b2e4b;
+      transition: border .16s;
+    }
+    .mascota-form input:focus,
+    .mascota-form select:focus {
+      border-color: #2378ff;
+    }
+    .mascota-form .form-row {
+      display: flex;
+      gap: 10px;
+    }
+    .mascota-form .form-row > * {
+      flex: 1 1 0;
+    }
+    .mascota-form .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+      justify-content: flex-end;
+    }
+    .mascota-modal .close-modal {
+      position: absolute;
+      top: 6px;
+      right: 12px;
+      background: transparent;
+      border: none;
+      font-size: 1.7em;
+      color: #2378ff;
+      cursor: pointer;
+    }
+    @media (max-width: 700px) {
+      .mascota-card {
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        padding: 18px 10px;
+      }
+      .mascota-actions {
+        flex-direction: row;
+        margin-left: 0;
+        gap: 8px;
+      }
+      .mascota-modal {
+        padding: 18px 6vw 16px 6vw;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="mascotas-dashboard">
+    <div class="mascotas-header">
+      <h1>Mis Mascotas</h1>
+      <button class="btn-primary" id="agregarMascotaBtn">+ Agregar Mascota</button>
+    </div>
+    <div class="mascotas-lista" id="mascotasLista">
+      <!-- Aquí se renderiza la lista de mascotas -->
+    </div>
+    <div class="mascotas-vacio" id="mascotasVacio" style="display: none;">
+      <p>No tienes mascotas ingresadas aún.</p>
+      <button class="btn-primary" id="agregarMascotaBtn2">Agregar Mascota</button>
+    </div>
+  </section>
+
+  <!-- MODAL FORMULARIO AGREGAR/EDITAR MASCOTA -->
+  <div class="mascota-modal-bg" id="mascotaModalBg">
+    <div class="mascota-modal">
+      <button class="close-modal" id="cerrarModalBtn" title="Cerrar">&times;</button>
+      <h2 id="modalTitulo">Agregar Mascota</h2>
+      <form class="mascota-form" id="mascotaForm">
+        <div class="form-row">
+          <div>
+            <label for="nombreMascota">Nombre</label>
+            <input type="text" id="nombreMascota" name="nombreMascota" required maxlength="30">
+          </div>
+          <div>
+            <label for="razaMascota">Raza</label>
+            <input type="text" id="razaMascota" name="razaMascota" maxlength="30">
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="edadMascota">Edad</label>
+            <input type="number" id="edadMascota" name="edadMascota" min="0" max="40" required>
+          </div>
+          <div>
+            <label for="sexoMascota">Sexo</label>
+            <select id="sexoMascota" name="sexoMascota" required>
+              <option value="">Seleccionar</option>
+              <option value="Macho">Macho</option>
+              <option value="Hembra">Hembra</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="pesoMascota">Peso (kg)</label>
+            <input type="number" id="pesoMascota" name="pesoMascota" min="0" max="120" step="0.1">
+          </div>
+          <div>
+            <label for="colorMascota">Color</label>
+            <input type="text" id="colorMascota" name="colorMascota" maxlength="20">
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="fotoMascota">Foto (URL)</label>
+            <input type="url" id="fotoMascota" name="fotoMascota" placeholder="http://...">
+          </div>
+        </div>
+        <hr style="margin:18px 0 12px 0;">
+        <div>
+          <label for="nombreDuenio">Nombre del Dueño</label>
+          <input type="text" id="nombreDuenio" name="nombreDuenio" maxlength="30" required>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="telDuenio">Teléfono</label>
+            <input type="tel" id="telDuenio" name="telDuenio" maxlength="20">
+          </div>
+          <div>
+            <label for="emailDuenio">Email</label>
+            <input type="email" id="emailDuenio" name="emailDuenio" maxlength="40">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-outline" id="cancelarBtn">Cancelar</button>
+          <button type="submit" class="btn-primary" id="guardarBtn">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Ejemplo de array de mascotas (simulación)
+    let mascotas = [
+      {
+        nombre: "Firulais",
+        raza: "Labrador",
+        edad: 3,
+        sexo: "Macho",
+        peso: 28,
+        color: "Marrón",
+        foto: "https://images.unsplash.com/photo-1518715308788-300e1aa2e921?auto=format&fit=crop&w=400&q=80",
+        duenioNombre: "Juan Pérez",
+        duenioTel: "11-1234-5678",
+        duenioEmail: "juan@email.com"
+      }
+    ];
+    let editIndex = null;
+
+    function renderMascotas() {
+      const lista = document.getElementById('mascotasLista');
+      const vacio = document.getElementById('mascotasVacio');
+      lista.innerHTML = '';
+      if (!mascotas.length) {
+        vacio.style.display = '';
+        lista.style.display = 'none';
+        return;
+      }
+      vacio.style.display = 'none';
+      lista.style.display = 'flex';
+
+      mascotas.forEach((m, i) => {
+        const card = document.createElement('div');
+        card.className = 'mascota-card';
+
+        card.innerHTML = `
+          <div class="mascota-foto">
+            <img src="${m.foto ? m.foto : 'https://cdn-icons-png.flaticon.com/512/616/616408.png'}" alt="${m.nombre}">
+          </div>
+          <div class="mascota-datos">
+            <h2>${m.nombre} <span class="mascota-raza">- ${m.raza || 'Sin raza'}</span></h2>
+            <ul>
+              <li><strong>Edad:</strong> ${m.edad ? m.edad + ' años' : '-'}</li>
+              <li><strong>Sexo:</strong> ${m.sexo || '-'}</li>
+              <li><strong>Peso:</strong> ${m.peso ? m.peso + ' kg' : '-'}</li>
+              <li><strong>Color:</strong> ${m.color || '-'}</li>
+            </ul>
+          </div>
+          <div class="duenio-datos">
+            <h3>Dueño: ${m.duenioNombre || '-'}</h3>
+            <ul>
+              <li><strong>Tel:</strong> ${m.duenioTel || '-'}</li>
+              <li><strong>Email:</strong> ${m.duenioEmail || '-'}</li>
+            </ul>
+          </div>
+          <div class="mascota-actions">
+            <button class="btn-outline" onclick="editarMascota(${i})">Editar</button>
+            <button class="btn-danger" onclick="eliminarMascota(${i})">Eliminar</button>
+          </div>
+        `;
+        lista.appendChild(card);
+      });
+    }
+
+    function abrirModalMascota(mascota = null, index = null) {
+      document.getElementById('mascotaModalBg').classList.add('activo');
+      document.getElementById('modalTitulo').innerText = mascota ? 'Editar Mascota' : 'Agregar Mascota';
+      document.getElementById('mascotaForm').reset();
+      editIndex = index;
+
+      // Si es edición, cargar datos
+      if (mascota) {
+        document.getElementById('nombreMascota').value = mascota.nombre || '';
+        document.getElementById('razaMascota').value = mascota.raza || '';
+        document.getElementById('edadMascota').value = mascota.edad || '';
+        document.getElementById('sexoMascota').value = mascota.sexo || '';
+        document.getElementById('pesoMascota').value = mascota.peso || '';
+        document.getElementById('colorMascota').value = mascota.color || '';
+        document.getElementById('fotoMascota').value = mascota.foto || '';
+        document.getElementById('nombreDuenio').value = mascota.duenioNombre || '';
+        document.getElementById('telDuenio').value = mascota.duenioTel || '';
+        document.getElementById('emailDuenio').value = mascota.duenioEmail || '';
+      }
+    }
+
+    function cerrarModalMascota() {
+      document.getElementById('mascotaModalBg').classList.remove('activo');
+      editIndex = null;
+    }
+
+    // Botones de agregar
+    document.getElementById('agregarMascotaBtn').onclick = () => abrirModalMascota();
+    document.getElementById('agregarMascotaBtn2').onclick = () => abrirModalMascota();
+
+    // Botones de cerrar/cancelar
+    document.getElementById('cerrarModalBtn').onclick = cerrarModalMascota;
+    document.getElementById('cancelarBtn').onclick = cerrarModalMascota;
+    // Cerrar modal con fondo
+    document.getElementById('mascotaModalBg').onclick = function(e){
+      if(e.target === this) cerrarModalMascota();
+    };
+
+    // Formulario submit
+    document.getElementById('mascotaForm').onsubmit = function(e){
+      e.preventDefault();
+      const m = {
+        nombre: document.getElementById('nombreMascota').value.trim(),
+        raza: document.getElementById('razaMascota').value.trim(),
+        edad: Number(document.getElementById('edadMascota').value),
+        sexo: document.getElementById('sexoMascota').value,
+        peso: Number(document.getElementById('pesoMascota').value) || null,
+        color: document.getElementById('colorMascota').value.trim(),
+        foto: document.getElementById('fotoMascota').value.trim(),
+        duenioNombre: document.getElementById('nombreDuenio').value.trim(),
+        duenioTel: document.getElementById('telDuenio').value.trim(),
+        duenioEmail: document.getElementById('emailDuenio').value.trim()
+      };
+      if(editIndex !== null) {
+        mascotas[editIndex] = m;
+      } else {
+        mascotas.push(m);
+      }
+      cerrarModalMascota();
+      renderMascotas();
+    };
+
+    // Editar y eliminar mascotas (exponemos al global para inline HTML)
+    window.editarMascota = function(idx) {
+      abrirModalMascota(mascotas[idx], idx);
+    };
+    window.eliminarMascota = function(idx) {
+      if(confirm('¿Seguro que querés eliminar esta mascota?')){
+        mascotas.splice(idx, 1);
+        renderMascotas();
+      }
+    };
+
+    // Inicial
+    renderMascotas();
+  </script>
+</body>
+</html>

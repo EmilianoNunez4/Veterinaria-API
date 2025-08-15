@@ -173,7 +173,7 @@ body.crossfade-activo .hero-bg {
   background-image: url('https://images.unsplash.com/photo-1526256262350-7da7584cf5eb?auto=format&fit=crop&w=1600&q=80');
 }
 .hero-bg2 {
-  background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=1153&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+  background-image: url('src/veterianria.jpg');
 }
 .hero-bg.activo {
   opacity: 1;
@@ -294,7 +294,7 @@ body.crossfade-activo .hero-bg {
 
 .svc-section { padding: 56px 0; background: #ffffff; }
 .svc-container { max-width: 1200px; min-height: 550px;margin: 0 auto; padding: 0 20px; }
-.svc-title { text-align:center; margin-bottom: 28px; font-size: 1.9rem; color:#2b2b2b; letter-spacing:0.6px; }
+.svc-title { text-align:center; margin-bottom: 28px; font-size: 1.9rem; color:#203a5c; letter-spacing:0.6px; }
 
 .svc-carousel-wrapper { position: relative; display:flex; align-items:center; }
 .svc-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 10; background: #ffffffcc; border: 1px solid #e6e6e6; width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
@@ -308,12 +308,12 @@ body.crossfade-activo .hero-bg {
 
 .svc-image { height: 220px; background-size: cover; background-position:center; position:relative; }
 .svc-overlay { position:absolute; left:0; bottom:0; right:0; background: linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,102,153,0.82) 100%); color:#fff; padding:18px; }
-.svc-overlay h3 { margin:0; font-size:1.05rem; font-weight:800; }
-.svc-overlay p { margin:6px 0 0; font-size:0.9rem; opacity:0.95; }
+.svc-overlay h3 { margin:0; font-size:1.25rem; font-weight:800; }
+.svc-overlay p { margin:6px 0 0; font-size:1.00rem; opacity:0.95; }
 
 .svc-body { padding:18px; color:#444; flex:1 1 auto; }
-.svc-body h4 { margin:0 0 8px; font-size:1.05rem; color:#1b2e4b; }
-.svc-body p { margin:0; font-size:0.95rem; line-height:1.45; color:#666; }
+.svc-body h4 { margin:0 0 8px; font-size:1.23rem; color:#1b2e4b; }
+.svc-body p { margin:0; font-size:1.15rem; line-height:1.45; color:#666; }
 
 /* indicadores (opcionales) */
 .svc-dots { text-align:center; margin-top:16px; }
