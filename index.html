@@ -27,7 +27,10 @@
 
   <!-- HERO / BANNER PRINCIPAL (nuevo: animaciones + overlay + franja de logos) -->
 <section class="hero-hero">
-  <div class="hero-bg" role="img" aria-label="Equipo médico reuniéndose" style="background-image: url('https://images.unsplash.com/photo-1526256262350-7da7584cf5eb?auto=format&fit=crop&w=1600&q=80')"></div>
+  <div class="hero-bg-crosfade">
+    <div class="hero-bg hero-bg1" aria-label="Equipo médico reuniéndose"></div>
+    <div class="hero-bg hero-bg2" aria-label="Perro en consulta veterinaria"></div>
+  </div>
   <div class="hero-overlay"></div>
 
   <div class="hero-content fadeUp">
@@ -67,25 +70,45 @@
 </section>
 
 <script>
-  
-    // Hero animations: fadeUp on load + slight parallax zoom to simulate movimiento de fondo
+    // Hero animaciones + crossfade
     document.addEventListener('DOMContentLoaded', () => {
-      const hero = document.querySelector('.hero-hero');
-      const bg = document.querySelector('.hero-bg');
+      // FadeUp animación
       const fadeEls = document.querySelectorAll('.fadeUp');
-      // activar entrada con delay
       setTimeout(()=> fadeEls.forEach(el => el.classList.add('show')), 200);
 
-      // ligera animación continua del fondo (zoom lento)
+      // Crossfade suave entre 2 imágenes
+      const bg1 = document.querySelector('.hero-bg1');
+      const bg2 = document.querySelector('.hero-bg2');
+      let visible = 1; // 1 muestra bg1, 2 muestra bg2
+
+      // Parallax suave solo en la que está visible
       let scale = 1.02;
-      let dir = 0.00002; // velocidad muy lenta
+      let dir = 0.00002;
       setInterval(() => {
         scale += dir;
         if (scale > 1.04 || scale < 1.02) dir *= -1;
-        bg.style.transform = `scale(${scale})`;
+        (visible === 1 ? bg1 : bg2).style.transform = `scale(${scale})`;
       }, 60);
+
+      // Mostrar bg1 sin transición al principio
+      bg1.classList.add('activo');
+      // Activar transición después de que la imagen inicial ya se mostró (pequeño retardo)
+      setTimeout(() => {
+        document.body.classList.add('crossfade-activo');
+      }, 80);
+
+      // Crossfade cada 7s
+      setInterval(() => {
+        visible = visible === 1 ? 2 : 1;
+        if(visible === 1){
+          bg1.classList.add('activo');
+          bg2.classList.remove('activo');
+        } else {
+          bg2.classList.add('activo');
+          bg1.classList.remove('activo');
+        }
+      }, 7000);
     });
-    // Si querés volver a usar el carrusel original, hay script más arriba en el HTML
 </script>
 
   <!-- OPCIONES RÁPIDAS -->
@@ -126,7 +149,7 @@
       <div class="svc-carousel" role="list" aria-live="polite">
         <!-- Card 1 -->
         <article class="svc-card" role="listitem">
-          <div class="svc-image" style="background-image:url('src/clinica.jpg')">
+          <div class="svc-image" style="background-image:url('src/consultamedic.jpg')">
             <div class="svc-overlay">
               <h3>Consultas y Chequeos</h3>
               <p>Atención veterinaria general para perros y gatos.</p>
@@ -140,7 +163,7 @@
 
         <!-- Card 2 -->
         <article class="svc-card" role="listitem">
-          <div class="svc-image" style="background-image:url('src/clinica.jpg')">
+          <div class="svc-image" style="background-image:url('src/vacunacion.jpg')">
             <div class="svc-overlay">
               <h3>Vacunación</h3>
               <p>Protección contra enfermedades comunes.</p>
@@ -154,7 +177,7 @@
 
         <!-- Card 3 -->
         <article class="svc-card" role="listitem">
-          <div class="svc-image" style="background-image:url('src/clinica.jpg')">
+          <div class="svc-image" style="background-image:url('src/cirugia.jpg')">
             <div class="svc-overlay">
               <h3>Cirugías</h3>
               <p>Intervenciones seguras y con monitoreo.</p>
@@ -168,7 +191,7 @@
 
         <!-- Card 4 -->
         <article class="svc-card" role="listitem">
-          <div class="svc-image" style="background-image:url('src/clinica.jpg')">
+          <div class="svc-image" style="background-image:url('src/peluqueria.jpg')">
             <div class="svc-overlay">
               <h3>Peluquería y Estética</h3>
               <p>Cortes, baños y tratamientos dermatológicos.</p>
@@ -182,7 +205,7 @@
 
         <!-- Card 5 -->
         <article class="svc-card" role="listitem">
-          <div class="svc-image" style="background-image:url('src/clinica.jpg')">
+          <div class="svc-image" style="background-image:url('src/emergencias\ \(1\).jpg')">
             <div class="svc-overlay">
               <h3>Emergencias 24hs</h3>
               <p>Atención inmediata para lo urgente.</p>
@@ -196,7 +219,7 @@
 
         <!-- Card 6 -->
         <article class="svc-card" role="listitem">
-          <div class="svc-image" style="background-image:url('src/clinica.jpg')">
+          <div class="svc-image" style="background-image:url('src/laboratorio\ clinico.jpg')">
             <div class="svc-overlay">
               <h3>Laboratorio Clínico</h3>
               <p>Análisis rápidos y precisos in-house.</p>
@@ -307,7 +330,7 @@
   </div>
   <div class="historia-bloque" id="historiaBloque1">
     <div class="historia-bloque-img">
-      <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=900&q=80" alt="Diagnóstico por imágenes" />
+      <img src="src/consultamedica.jpg" alt="Diagnóstico por imágenes" />
     </div>
     <div class="historia-bloque-content">
       <h2 class="historia-titulo">DIAGNÓSTICO POR IMÁGENES.</h2>
