@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Veterinaria - Turnos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="turnos.css">
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <nav>
+      <div class="logo">
+        <img src="src/logovet-Photoroom.png" alt="logo-empresa" class="logimg">
+        <span class="logo-text" style="font-weight: bold;">Veterinaria San Jorge</span>
+      </div>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="mascotas.html">Mascotas</a></li>
+        <li><a href="turnos.html" class="active">Turnos</a></li>
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="login.html" onclick="cerrarSesion()">Salir</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero-hero turnos-hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content fadeUp">
+      <h1 class="hero-title">¡Reservá tu turno!</h1>
+      <p class="hero-sub">Elegí la fecha y horario disponible para tu mascota</p>
+    </div>
+  </section>
+
+  <!-- FORMULARIO DE TURNOS -->
+  <main class="turnos-main">
+    <div class="turnos-container">
+      <h2>Solicitar Turno</h2>
+      <form id="formTurnos">
+        <label for="fecha">Seleccioná una fecha:</label>
+        <input type="date" id="fecha" name="fecha" required>
+
+        <div id="horarios-container" class="horarios-container">
+          <p>Elegí una fecha para ver los horarios disponibles</p>
+        </div>
+
+        <button type="submit" class="btn btn-primary" disabled id="btnConfirmar">Confirmar Turno</button>
+      </form>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer-vet">
+    <div class="footer-copy">
+      © 2025 Veterinaria. Todos los derechos reservados.
+    </div>
+  </footer>
+
+  <script>
+    const fechaInput = document.getElementById("fecha");
+    const horariosContainer = document.getElementById("horarios-container");
+    const btnConfirmar = document.getElementById("btnConfirmar");
+    let horarioSeleccionado = null;
+
+    fechaInput.addEventListener("change", async () => {
+      const fecha = fechaInput.value;
+      if(!fecha) return;
+
+      horariosContainer.innerHTML = "<p>Cargando horarios...</p>";
+
+      try {
+        const res = await fetch(`controlador_turnos.php?fecha=${fecha}`);
+        const data = await res.json();
+
+        if(data.length === 0){
+          horariosContainer.innerHTML = "<p>No hay horarios disponibles para esta fecha.</p>";
+          btnConfirmar.disabled = true;
+          return;
+        }
+
+        horariosContainer.innerHTML = "";
+        data.forEach(h => {
+          const btn = document.createElement("button");
+          btn.textContent = h;
+          btn.className = "btn btn-outline";
+          btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            document.querySelectorAll(".horarios-container button").forEach(b => b.classList.remove("selected"));
+            btn.classList.add("selected");
+            horarioSeleccionado = h;
+            btnConfirmar.disabled = false;
+          });
+          horariosContainer.appendChild(btn);
+        });
+      } catch (error) {
+        horariosContainer.innerHTML = "<p>Error al cargar horarios.</p>";
+      }
+    });
+
+    document.getElementById("formTurnos").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if(!horarioSeleccionado) return;
+
+      const fecha = fechaInput.value;
+      const res = await fetch("controlador_turnos.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fecha, horario: horarioSeleccionado })
+      });
+
+      const data = await res.json();
+      if(data.success){
+        alert("¡Turno reservado con éxito!");
+        location.reload();
+      } else {
+        alert("Error al reservar turno: " + data.message);
+      }
+    });
+  </script>
+</body>
+</html>

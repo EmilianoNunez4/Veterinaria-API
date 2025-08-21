@@ -1,0 +1,538 @@
+/* Reset básico y estilos generales */
+body { 
+  margin: 0; 
+  font-family: 'Arial', sans-serif; 
+  background: #f8fafc; /* Un fondo ligeramente más claro */
+  color: #1b2e4b; 
+  -webkit-font-smoothing: antialiased; 
+  -moz-osx-font-smoothing: grayscale; 
+}
+
+/* --- ESTILOS DEL HEADER Y FOOTER (se mantienen de tus archivos originales) --- */
+header { position: sticky; top: 0; z-index: 1000; background: #f6f5f7; border-bottom: 1px solid #eee; }
+nav { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 74px; }
+.logimg{ width: 100px; }
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-text { font-weight: 700; font-size: 1.22em; letter-spacing: 1px; color: #1b2e4b; }
+nav ul { list-style: none; display: flex; gap: 38px; margin: 0; padding: 0; }
+nav a { color: #1b2e4b; text-decoration: none; font-weight: 500; font-size: 1.07em; padding: 6px 0; position: relative; transition: color 0.22s; }
+nav a::after { content: ''; display: block; margin: 0 auto; height: 2px; width: 0; background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%); transition: width 0.22s; border-radius: 2px; }
+nav a:hover, nav a:focus { color: #ff4b2b; }
+nav a:hover::after, nav a:focus::after { width: 80%; }
+.barra1{ height: 80px; width: 100%; background-color: #fbf4f4; }
+.footer-vet { background: linear-gradient(90deg, #0a2449 0%, #103364 100%); color: #ffffff; padding-top: 38px; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px);}
+  to   { opacity: 1; transform: translateY(0);}
+}
+@keyframes fadeSlideLeft {
+  from { opacity: 0; transform: translateX(40px);}
+  to   { opacity: 1; transform: translateX(0);}
+}
+@keyframes fadeSlideRight {
+  from { opacity: 0; transform: translateX(-40px);}
+  to   { opacity: 1; transform: translateX(0);}
+}
+@keyframes scaleIn {
+  0%   { opacity: 0; transform: scale(0.9);}
+  60%  { opacity: 1; transform: scale(1.05);}
+  100% { opacity: 1; transform: scale(1);}
+}
+
+/* Banner hero animaciones */
+.mascotas-hero .hero-title {
+  animation: fadeUp 0.8s cubic-bezier(.35,1.4,.38,1) 0.1s both;
+}
+.mascotas-hero .hero-sub {
+  animation: fadeSlideLeft 0.8s cubic-bezier(.43,1.2,.52,1) 0.35s both;
+}
+.mascotas-hero .hero-lead {
+  animation: fadeSlideRight 0.8s cubic-bezier(.43,1.2,.52,1) 0.55s both;
+}
+.mascotas-hero .hero-ctas {
+  animation: scaleIn 0.7s cubic-bezier(.32,1.4,.38,1) 0.8s both;
+}
+
+/* --- NUEVO DISEÑO DASHBOARD DE MASCOTAS --- */
+.mascotas-dashboard {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 24px 60px 24px;
+}
+
+.mascotas-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.mascotas-header h1 {
+  font-size: 2.4em;
+  color: #0a2449;
+  font-weight: 900;
+  margin: 0;
+}
+
+/* Grilla para las tarjetas de mascotas */
+.mascotas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 28px;
+}
+
+/* Nuevo diseño de tarjeta de mascota */
+.mascota-card {
+    background: #ffffff;
+    background: linear-gradient(0deg,rgba(255, 255, 255, 1) 67%, rgb(201, 205, 211) 62%);
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(10, 36, 73, 0.08);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.mascota-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(10, 36, 73, 0.12);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.mascota-icono {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.card-titulo h2 {
+    margin: 0;
+    font-size: 1.3em;
+    color: #1b2e4b;
+    font-weight: 900;
+}
+
+.card-titulo p {
+    margin: 2px 0 0 0;
+    font-size: 0.95em;
+    color: #6d7a8a;
+    font-weight: 500;
+}
+
+.card-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: auto; /* Empuja las acciones hacia abajo */
+    border-top: 1px solid #f0f3f6;
+    padding-top: 15px;
+}
+
+.btn-icon {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1em;
+    padding: 8px;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.btn-icon.btn-edit { color: #2378ff; }
+.btn-icon.btn-edit:hover { background-color: rgba(35, 120, 255, 0.1); }
+
+.btn-icon.btn-delete { color: #ff4155; }
+.btn-icon.btn-delete:hover { background-color: rgba(255, 65, 85, 0.1); }
+
+/* ...tu CSS existente arriba... */
+
+/* === ANIMACIÓN PARA CARDS DE MASCOTAS AL CARGAR === */
+@keyframes popInCard {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(-8px) scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.mascotas-grid .mascota-card {
+  /* Si quieres que la animación ocurra siempre al montar, pon aquí la animación */
+  animation: popInCard 0.7s cubic-bezier(.3,1.6,.4,1) both;
+  /* Para animación escalonada, el JS agregará --card-idx */
+  animation-delay: var(--card-delay, 0s);
+  will-change: opacity, transform;
+}
+
+/* Estilos para el estado vacío */
+.mascotas-vacio {
+  text-align: center;
+  margin-top: 50px;
+  padding: 40px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(10, 36, 73, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.vacio-icono {
+    font-size: 3em;
+    color: #2378ff;
+    margin-bottom: 20px;
+    background: rgba(35, 120, 255, 0.1);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mascotas-vacio h2 {
+    font-size: 1.5em;
+    color: #1b2e4b;
+    margin: 0 0 10px 0;
+}
+.mascotas-vacio p {
+    color: #6d7a8a;
+    max-width: 400px;
+    margin-bottom: 25px;
+}
+
+/* --- ESTILOS DEL MODAL (PULIDOS) --- */
+.mascota-modal-bg {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  inset: 0;
+  background: rgba(10, 36, 73, 0.5);
+  backdrop-filter: blur(4px);
+  align-items: center;
+  justify-content: center;
+}
+.mascota-modal-bg.activo {
+  display: flex;
+}
+.mascota-modal {
+  background: #fff;
+  border-radius: 16px;
+  max-width: 450px;
+  width: 95vw;
+  padding: 30px;
+  box-shadow: 0 10px 40px rgba(35, 120, 255, 0.2);
+  position: relative;
+  animation: modalIn .3s cubic-bezier(.3,1.2,.2,1);
+}
+@keyframes modalIn {
+  from { transform: scale(0.9) translateY(20px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+.mascota-modal h2 {
+  margin: 0 0 24px 0;
+  font-size: 1.6em;
+  color: #0a2449;
+  font-weight: 900;
+  text-align: center;
+}
+.mascota-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.mascota-form label {
+  font-weight: 700;
+  color: #1b2e4b;
+  margin-bottom: 6px;
+  font-size: 1em;
+  display: block;
+}
+.mascota-form input, .mascota-form select {
+  border: 1.5px solid #c3d9f7;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 1em;
+  width: 100%;
+  box-sizing: border-box;
+  background: #f8fafc;
+  color: #1b2e4b;
+  transition: all .2s;
+}
+.mascota-form input:focus, .mascota-form select:focus {
+  outline: none;
+  border-color: #2378ff;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(35, 120, 255, 0.15);
+}
+.mascota-form .form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  justify-content: flex-end;
+}
+.mascota-modal .close-modal {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  font-size: 1.8em;
+  color: #b0c4de;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.mascota-modal .close-modal:hover {
+  color: #2378ff;
+}
+
+/* Media queries para responsividad */
+@media (max-width: 700px) {
+  nav { flex-direction: column; height: auto; padding: 16px 8px; }
+  nav ul { gap: 14px; justify-content: center; }
+  .logo { margin-bottom: 10px; }
+  .mascotas-header h1 { font-size: 2em; }
+}
+
+
+/* BARRA */
+.barra1{
+  height: 80px;
+  width: 100%;
+  background-color: #fbf4f4;
+}
+
+/* FOOTER (mantengo) */
+.footer-vet { background: linear-gradient(90deg, #0a2449 0%, #103364 100%); color: #ffffff; padding-top: 38px; font-family: 'Segoe UI', Arial, sans-serif; border-top: 2px solid #ffffff; }
+.footer-main { display: flex; gap: 32px; max-width: 1400px; margin: 0 auto; padding: 0 32px 18px 32px; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; }
+.footer-brand { flex: 1 1 180px; display: flex; align-items: center; gap: 8px; font-size: 2em; font-weight: 700; letter-spacing: 2px; color: #ffffff; margin-right: 12px; margin-bottom: 12px; }
+.footer-title { color: #ffffff; font-weight: 700; font-size: 1em; }
+.footer-logo { display: inline-flex; vertical-align: middle; }
+.footer-col { flex: 1 1 220px; min-width: 200px; margin-bottom: 16px; }
+.footer-col h3 { margin-bottom: 14px; color: #ffffff; font-size: 1.25em; font-weight: 700; }
+.footer-col p { font-size: 1.07em; color: #ffffff; margin: 0; }
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col ul li { margin-bottom: 7px; font-size: 1em; display: flex; align-items: center; color: #ffffff; }
+.footer-col ul li a { color: #ffffff; text-decoration: underline; transition: color 0.14s; }
+.footer-col ul li a:hover { color: #ffffff; }
+.footer-icon { display: inline-flex; margin-right: 7px; vertical-align: middle; }
+.footer-copy { border-top: 1px solid #ffffff; padding: 20px 0 14px 0; text-align: center; color: #ffffff; font-size: 1.05em; background: linear-gradient(90deg, #0a2449 0%, #103364 100%); }
+
+@media (max-width: 900px) {
+  .footer-main { flex-direction: column; align-items: flex-start; gap: 20px; padding: 0 10px 18px 10px; }
+  .footer-brand { font-size: 1.5em; }
+}
+@media (max-width: 600px) {
+  .footer-main { padding: 0 2vw 18px 2vw; }
+  .footer-col { min-width: unset; }
+}
+
+/* --- ESTILOS PARA EL BANNER DE BIENVENIDA --- */
+/* Banner Hero Mascotas */
+.mascotas-hero {
+  position: relative;
+  width: 100%;
+  min-height: 68vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.mascotas-hero .hero-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: opacity 1.5s ease-in-out;
+  z-index: 0;
+}
+
+.mascotas-hero .hero-bg-1 { opacity: 1; }
+.mascotas-hero .hero-bg-2 { opacity: 0; }
+
+.mascotas-hero .hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 26, 48, 0.36);
+  z-index: 1;
+}
+
+.mascotas-hero .hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: #fff;
+  padding: 20px;
+}
+
+.mascotas-hero .hero-title {
+  font-size: 48px;
+  font-weight: 800;
+  margin: 0 0 10px 0;
+  letter-spacing: 1px;
+  line-height: 1;
+  text-shadow: 0 6px 26px rgba(0, 0, 0, 0.28);
+}
+
+.mascotas-hero .hero-sub {
+  font-size: 20px;
+  margin: 0 0 12px 0;
+  font-weight: 700;
+}
+
+.mascotas-hero .hero-lead {
+    font-size: 15px;
+    margin: 0 0 20px 0;
+    color: rgba(255, 255, 255, 0.92);
+    max-width: 780px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Estilos de botones consistentes con index.css */
+.btn-primary {
+  text-decoration: none;
+  background: #2378ff;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 10px 22px;
+  font-size: 1.05em;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(35, 120, 255, 0.25);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-primary:hover {
+  background: #4d92ff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px burdensome rgba(35, 120, 255, 0.3);
+}
+
+.btn-outline {
+  background: white;
+  color: #0a2449;
+  border-radius: 7px;
+  padding: 10px 22px;
+  font-size: 1.05em;
+  font-weight: 700;
+  border: 1px solid rgba(10, 36, 73, 0.06);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-outline:hover {
+  background: #0a24496c;
+  color: #ffffff;
+}
+
+/* Contenedor principal de mascotas */
+.mascotas-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.mascotas-container h2 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #06263d;
+}
+
+/* Grid de tarjetas */
+.mascotas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+/* Tarjetas de mascotas */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 16px;
+}
+
+.card-body h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.4em;
+  color: #06263d;
+}
+
+.card-body p {
+  margin: 0 0 12px 0;
+  color: #555;
+  font-size: 0.95em;
+}
+
+/* Botones */
+.card-body .btn {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.95em;
+  transition: background 0.3s ease;
+}
+
+.card-body .btn-primary {
+  background: #f48200;
+  color: #fff;
+  border: none;
+}
+
+.card-body .btn-primary:hover {
+  background: #d76e00;
+}
+
+.card-body .btn-outline {
+  background: transparent;
+  border: 2px solid #f48200;
+  color: #f48200;
+}
+
+.card-body .btn-outline:hover {
+  background: #f48200;
+  color: #fff;
+}
+
