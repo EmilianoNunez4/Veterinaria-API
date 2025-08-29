@@ -30,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-
 $app->group('/usuarios', function (RouteCollectorProxy $group) {
     $group->post('/registro', \UserController::class . ':Registro');
     $group->post('/login', \UserController::class . ':Login');

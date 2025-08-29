@@ -18,7 +18,7 @@
     <ul>
       <li><a href="index.html">Inicio</a></li>
       <li><a href="mascotas.html">Mascotas</a></li>
-      <li><a href="#turnos">Turnos</a></li>
+      <li><a href="turnos.html">Turnos</a></li>
       <li><a href="#servicios">Servicios</a></li>
       <li><a href="login.html" onclick="cerrarSesion()">Salir</a></li>
     </ul>
@@ -38,7 +38,7 @@
     <p class="hero-sub">Atención centrada en tu <strong>Mascota</strong></p>
     <p class="hero-lead">Somos un equipo de profesionales comprometidos con cada mascota. Atención de calidad, humana y cercana.</p>
     <div class="hero-ctas">
-      <a class="btn btn-primary" href="#turnos">Reservar Turno</a>
+      <a class="btn btn-primary" href="turnos.html" onclick="checkAuth(event)">Reservar Turno</a>
       <a class="btn btn-outline" href="#servicios">Conocé Más</a>
     </div>
   </div>
@@ -115,21 +115,21 @@
 <section class="turnos-nuevo-bloque">
   <div class="turnos-nuevo-options">
     <div class="turnos-nuevo-option">
-      <h3>RESERVÁ TU TURNO</h3>
-      <p>Reservá tu turno de<br>manera online</p>
-      <a href="#turnos-online" class="turnos-nuevo-btn">Solicitar Turno</a>
+      <h3>VEA NUESTROS SERVICIOS</h3>
+      <p>Vea todos nuestros servicios<br> disponibles manera online</p>
+      <a href="#turnos-online" class="turnos-nuevo-btn">Ver servicios</a>
     </div>
     <div class="turnos-nuevo-divider"></div>
     <div class="turnos-nuevo-option">
       <h3>MASCOTAS</h3>
       <p>Agregue mascotas para<br>solicitar turnos</p>
-      <a href="mascotas.html" class="turnos-nuevo-btn">Ir al Portal</a>
+      <a href="mascotas.html" class="turnos-nuevo-btn" onclick="checkAuth(event)">Agregar Mascotas</a>
     </div>
     <div class="turnos-nuevo-divider"></div>
     <div class="turnos-nuevo-option">
-      <h3>PORTAL WEB</h3>
-      <p>Consulte resultados de Análisis<br>y Diagnóstico por Imagen</p>
-      <a href="#recetas-online" class="turnos-nuevo-btn">Solicitar Receta</a>
+      <h3>RESERVÁ TU TURNO</h3>
+      <p>Reservá tu turno de<br>manera online</p>
+      <a href="turnos.html" class="turnos-nuevo-btn" onclick="checkAuth(event)">Solicitar Turno</a>
     </div>
   </div>
   <div class="turnos-nuevo-logos">
@@ -137,6 +137,17 @@
     <h1 class="vet-san">VETERINARIA SAN JORGE</h1>
   </div>
 </section>
+
+<script>
+  function checkAuth(event) {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      event.preventDefault();
+      alert("Primero iniciá sesión para continuar.");
+      window.location.href = "login.html";
+    }
+  }
+</script>
 
   <!-- SERVICIOS -->
 <section id="servicios-carousel" class="svc-section">
