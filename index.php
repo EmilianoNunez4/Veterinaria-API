@@ -39,9 +39,10 @@ $app->group('/usuarios', function (RouteCollectorProxy $group) {
 });     
 
 $app->group('/mascotas', function (RouteCollectorProxy $group) {
-    $group->post('[/]', \MascotaController::class . ':AgregarMascota')->add('AuthJWT::VerificarToken');
+    $group->post('/agregar', \MascotaController::class . ':AgregarMascota')->add('AuthJWT::VerificarToken');
     $group->get('/ver-mascotas', \MascotaController::class . ':ListarTodasLasMascotas')->add('AuthJWT::VerificarAdmin');
     $group->get('/mis-mascotas', \MascotaController::class . ':ListarMisMascotas')->add('AuthJWT::VerificarToken');
+    $group->put('/editar/{id}', \MascotaController::class . ':EditarMascota')->add('AuthJWT::VerificarToken');;
 });
 
 $app->group('/turnos', function (RouteCollectorProxy $group) {

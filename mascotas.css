@@ -161,29 +161,6 @@ nav a:hover::after, nav a:focus::after { width: 80%; }
 
 /* ...tu CSS existente arriba... */
 
-/* === ANIMACIÓN PARA CARDS DE MASCOTAS AL CARGAR === */
-@keyframes popInCard {
-  0% {
-    opacity: 0;
-    transform: translateY(40px) scale(0.95);
-  }
-  70% {
-    opacity: 1;
-    transform: translateY(-8px) scale(1.03);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-.mascotas-grid .mascota-card {
-  /* Si quieres que la animación ocurra siempre al montar, pon aquí la animación */
-  animation: popInCard 0.7s cubic-bezier(.3,1.6,.4,1) both;
-  /* Para animación escalonada, el JS agregará --card-idx */
-  animation-delay: var(--card-delay, 0s);
-  will-change: opacity, transform;
-}
-
 /* Estilos para el estado vacío */
 .mascotas-vacio {
   text-align: center;
@@ -312,6 +289,89 @@ nav a:hover::after, nav a:focus::after { width: 80%; }
   .mascotas-header h1 { font-size: 2em; }
 }
 
+/* === CARD ESTILO card-02.png === */
+.card-02 {
+  background: linear-gradient(180deg, #ffffff 40%, #939393 40%);
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 20px 20px 20px;
+  position: relative;
+  min-height: 300px;
+}
+
+.card-02 img {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 8px solid #ffffff;
+  background-color: white;
+}
+
+.card-02 h2 {
+  margin: 15px 0 5px;
+  font-size: 1.6em;
+  font-weight: 800;
+  color: #fff;
+}
+
+.card-02 .especie {
+  font-size: 1em;
+  color: #f0f0f0;
+  margin-bottom: 12px;
+}
+
+.card-02 p {
+  font-size: 0.95em;
+  color: #fff;
+  margin: 0 auto 20px;
+  line-height: 1.4em;
+}
+
+.card-02 .btn-editar {
+  background: #fff;
+  color: #555555;
+  font-weight: 700;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 28px;
+  cursor: pointer;
+  font-size: 1em;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: all 0.2s;
+}
+
+.card-02 .btn-editar:hover {
+  background: #eaeaea;
+  transform: translateY(-2px);
+}
+
+/* === ANIMACIÓN PARA CARD-02 === */
+@keyframes popInCard02 {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(-8px) scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.card-02 {
+  animation: popInCard02 0.8s cubic-bezier(.3,1.6,.4,1) both;
+  will-change: opacity, transform;
+}
+
 
 /* BARRA */
 .barra1{
@@ -366,13 +426,13 @@ nav a:hover::after, nav a:focus::after { width: 80%; }
   z-index: 0;
 }
 
-.mascotas-hero .hero-bg-1 { opacity: 1; }
-.mascotas-hero .hero-bg-2 { opacity: 0; }
+.mascotas-hero .hero-bg-1 { opacity: 1; background-image: url(src/consultamedic.jpg); }
+.mascotas-hero .hero-bg-2 { opacity: 1; background-image: url(src/atencion.jpg);}
 
 .mascotas-hero .hero-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(6, 26, 48, 0.36);
+  background: rgba(6, 26, 48, 0.508);
   z-index: 1;
 }
 
