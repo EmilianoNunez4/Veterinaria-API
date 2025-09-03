@@ -108,7 +108,9 @@ nav a:hover::after, nav a:focus::after { width: 80%; }
 .btn { display: inline-block; padding: 10px 22px; border-radius: 7px; text-decoration: none; font-weight: 700; cursor: pointer; }
 .btn-primary { background: #2378ff; color: #fff; box-shadow: 0 6px 26px rgba(14,38,70,0.18); transition: transform .22s, background .18s; }
 .btn-primary:hover { transform: translateY(-4px); background: #4d92ff; }
-.btn-outline { background: rgba(255,255,255,0.95); color: #0a2449; border: 1px solid rgba(10,36,73,0.06); }
+.btn-outline { background: rgba(255,255,255,0.95); color: #0a2449; border: 1px solid rgba(10,36,73,0.06); transition: all 0.2s ease;}
+.btn-outline:hover { background: #0a24496c; color: #ffffff;}
+
 /* FadeUp animation utility */
 .fadeUp { opacity: 0; transform: translateY(14px); transition: opacity .62s cubic-bezier(.2,.9,.3,1), transform .62s cubic-bezier(.2,.9,.3,1); }
 .fadeUp.show { opacity: 1; transform: translateY(0); }

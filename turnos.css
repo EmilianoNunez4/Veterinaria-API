@@ -49,8 +49,8 @@ nav a:hover::after, nav a:focus::after { width: 80%; }
   transition: transform .2s, background .18s, opacity .18s;
 }
 .btn:disabled { opacity: .55; cursor: not-allowed; }
-.btn-primary { background: var(--brand); color: #fff; box-shadow: var(--shadow); }
-.btn-primary:hover { transform: translateY(-2px); background: var(--brand-strong); }
+.btn-primary { background: rgb(3, 173, 3); color: #fff; box-shadow: var(--shadow); }
+.btn-primary:hover { transform: translateY(-2px); background:  rgb(76, 198, 76); }
 .btn-outline { background: #fff; color: var(--ink); border: 1px solid #e5e7eb; }
 a.btn { text-align: center; }
 
@@ -72,7 +72,7 @@ a.btn { text-align: center; }
   content: "";
   position: absolute;
   inset: 0;
-  background: url("src/turnos-banner.jpg") center/cover no-repeat;
+  background: url("src/consultamedica.jpg") center/cover no-repeat;
   z-index: 0;
   transform: scale(1.02);
   transition: transform 10s linear;
@@ -119,6 +119,7 @@ a.btn { text-align: center; }
   box-shadow: var(--shadow);
   padding: 22px;
   animation: fadeIn .6s ease;
+  background-color: white;
 }
 .turnos-container h2 {
   text-align: center;
@@ -134,8 +135,8 @@ a.btn { text-align: center; }
 
 .turnos-container label {
   display: block;
-  font-weight: 800;
-  color: var(--ink);
+  font-weight: 700;
+  color: rgb(36, 36, 36);
   margin-top: 12px;
   margin-bottom: 6px;
   letter-spacing: .2px;
@@ -143,7 +144,7 @@ a.btn { text-align: center; }
 .turnos-container input[type="date"],
 .turnos-container select,
 .turnos-container textarea {
-  width: 100%;
+  width: 96%;
   padding: 11px 12px;
   border: 1px solid #d1d5db;
   border-radius: 10px;
@@ -151,6 +152,7 @@ a.btn { text-align: center; }
   outline: none;
   transition: border-color .18s, box-shadow .18s;
   background: #fff;
+  color: gray;
 }
 .turnos-container textarea { min-height: 88px; resize: vertical; }
 .turnos-container input[type="date"]:focus,
@@ -170,7 +172,7 @@ a.btn { text-align: center; }
 .msg.info { background: #eff6ff; color: #1e40af; }
 .msg.warn { background: #fff7ed; color: #9a3412; }
 .msg.error { background: #fee2e2; color: #991b1b; }
-.msg.ok { background: #e6f9f0; color: #065f46; }
+.msg.ok { background: #e6f9f0; color: #065f46; text-align: center;}
 
 /* =========================
    HORARIOS DISPONIBLES
@@ -187,16 +189,17 @@ a.btn { text-align: center; }
   text-align: center;
   padding: 10px 12px;
   border-radius: 10px;
-  border: 2px solid var(--brand);
+  border: 2px solid;
+  border-color: rgb(59, 59, 59);
   background: #fff;
-  color: var(--ink);
+  color: rgb(59, 59, 59);
   font-weight: 700;
   cursor: pointer;
   transition: transform .16s, background .18s, color .18s, border-color .18s;
   user-select: none;
 }
-.horarios-container .horario:hover { background: var(--brand); color: #fff; transform: translateY(-1px); }
-.horarios-container .horario.selected { background: var(--brand); color: #fff; border-color: var(--brand); }
+.horarios-container .horario:hover { background: #293e5b; color: #ffffff; transform: translateY(-1px); }
+.horarios-container .horario.selected { background: rgb(39, 70, 114); color: #fff; border-color: white; }
 .horarios-container .horario[disabled],
 .horarios-container .horario.disabled {
   opacity: .45; cursor: not-allowed; text-decoration: line-through;

@@ -124,12 +124,22 @@ class TurnoController {
             return $response->withStatus(403);
         }
 
-        $stmt = $pdo->prepare("INSERT INTO turnos (usuario_id, mascota_id, turno_disponible_id, descripcion) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$usuario['id'], $data['mascota_id'], $data['turno_disponible_id'], $data['descripcion']]);
+        // 👉 Insert con motivo incluido
+        $stmt = $pdo->prepare("INSERT INTO turnos (usuario_id, mascota_id, turno_disponible_id, motivo, descripcion) 
+                            VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([
+            $usuario['id'],
+            $data['mascota_id'],
+            $data['turno_disponible_id'],
+            $data['motivo'],         // nuevo campo
+            $data['descripcion'] ?? null
+        ]);
+
+        // Marcar como ocupado
         $stmt = $pdo->prepare("UPDATE turnos_disponibles SET disponible = 0 WHERE id = ?");
         $stmt->execute([$data['turno_disponible_id']]);
+
         $response->getBody()->write(json_encode(["mensaje" => "Turno solicitado exitosamente."]));
-        return $response;
     }
 
     public static function CancelarTurno($request, $response, $args) {
@@ -173,42 +183,60 @@ class TurnoController {
     }
 
     public static function VerMisTurnos($request, $response, $args) {
-        $pdo = Conexion::obtenerConexion();
-        $token = $request->getAttribute('jwt');
+    $pdo = Conexion::obtenerConexion();
+    $token = $request->getAttribute('jwt');
 
-        if (!$token || !isset($token->email)) {
-            $response->getBody()->write(json_encode(["error" => "Token inválido o no proporcionado."]));
-            return $response->withStatus(401);
-        }
-
-        $emailUsuario = $token->email;
-        $stmt = $pdo->prepare("SELECT id FROM usuarios WHERE email = ?");
-        $stmt->execute([$emailUsuario]);
-        $usuario = $stmt->fetch();
-        $stmt = $pdo->prepare("SELECT t.id, td.fecha, td.hora, t.estado, t.costo, t.descripcion, m.nombre AS mascota FROM turnos t JOIN turnos_disponibles td ON t.turno_disponible_id = td.id JOIN mascotas m ON t.mascota_id = m.id WHERE t.usuario_id = ?");
-        $stmt->execute([$usuario['id']]);
-        $turnos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        if (empty($turnos)) {
-            $response->getBody()->write(json_encode(["mensaje" => "No tienes turnos registrados."]));
-            return $response->withStatus(200);
-        }
-        $response->getBody()->write(json_encode($turnos));
-        return $response;
+    if (!$token || !isset($token->email)) {
+        $response->getBody()->write(json_encode(["error" => "Token inválido o no proporcionado."]));
+        return $response->withStatus(401);
     }
 
-    public static function VerTodosLosTurnos($request, $response, $args) {
-        $pdo = Conexion::obtenerConexion();
-        $stmt = $pdo->query("SELECT t.id, td.fecha, td.hora, t.estado, t.costo, t.descripcion, m.nombre AS mascota, u.nombre AS usuario, u.email FROM turnos t JOIN turnos_disponibles td ON t.turno_disponible_id = td.id JOIN mascotas m ON t.mascota_id = m.id JOIN usuarios u ON t.usuario_id = u.id");
+    $emailUsuario = $token->email;
+    $stmt = $pdo->prepare("SELECT id FROM usuarios WHERE email = ?");
+    $stmt->execute([$emailUsuario]);
+    $usuario = $stmt->fetch();
+
+    $stmt = $pdo->prepare("SELECT t.id, td.fecha, td.hora, t.estado, t.costo, 
+                                  t.motivo, t.descripcion, 
+                                  m.nombre AS mascota
+                           FROM turnos t 
+                           JOIN turnos_disponibles td ON t.turno_disponible_id = td.id 
+                           JOIN mascotas m ON t.mascota_id = m.id 
+                           WHERE t.usuario_id = ?");
+    $stmt->execute([$usuario['id']]);
+    $turnos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if (empty($turnos)) {
+        $response->getBody()->write(json_encode(["mensaje" => "No tienes turnos registrados."]));
+        return $response->withStatus(200);
+    }
+
+    $response->getBody()->write(json_encode($turnos));
+    return $response;
+}
+
+
+    public function VerTodosLosTurnos(Request $request, Response $response, $args) {
+        $pdo = DB::getInstance();
+        $stmt = $pdo->query("SELECT t.id, td.fecha, td.hora, t.estado, t.costo, 
+                                    t.motivo, t.descripcion, 
+                                    m.nombre AS mascota, u.nombre AS usuario, u.email
+                            FROM turnos t
+                            JOIN turnos_disponibles td ON t.turno_disponible_id = td.id
+                            JOIN mascotas m ON t.mascota_id = m.id
+                            JOIN usuarios u ON t.usuario_id = u.id
+                            ORDER BY td.fecha, td.hora ASC");
         $turnos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if (empty($turnos)) {
-            $response->getBody()->write(json_encode(["mensaje" => "No hay turnos registrados."]));
-            return $response->withStatus(200);
+        if (!$turnos) {
+            $response->getBody()->write(json_encode(["mensaje" => "No hay turnos cargados"]));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
         }
+
         $response->getBody()->write(json_encode($turnos));
-        return $response;
+        return $response->withHeader('Content-Type', 'application/json');
     }
+
 
     public static function CambiarEstadoTurno($request, $response, $args) {
         $data = $request->getParsedBody();
