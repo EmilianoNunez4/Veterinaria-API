@@ -532,3 +532,7 @@ body.crossfade-activo .hero-bg {
   .footer-main { padding: 0 2vw 18px 2vw; }
   .footer-col { min-width: unset; }
 }
+
+html {
+  scroll-behavior: smooth;
+}

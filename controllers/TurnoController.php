@@ -93,6 +93,7 @@ class TurnoController {
         $data = $request->getParsedBody();
         $pdo = Conexion::obtenerConexion();
         $token = $request->getAttribute('jwt');
+
         if (!$token || !isset($token->email)) {
             $response->getBody()->write(json_encode(["error" => "Token inválido o no proporcionado."]));
             return $response->withStatus(401);
@@ -107,39 +108,60 @@ class TurnoController {
             return $response->withStatus(404);
         }
 
-        $stmt = $pdo->prepare("SELECT * FROM turnos_disponibles WHERE id = ? AND habilitado = 1 AND disponible = 1");
-        $stmt->execute([$data['turno_disponible_id']]);
-        $turnoDisponible = $stmt->fetch();
+        try {
+            // 🚀 Arrancamos la transacción
+            $pdo->beginTransaction();
 
-        if (!$turnoDisponible) {
-            $response->getBody()->write(json_encode(["error" => "El turno seleccionado no está disponible."]));
-            return $response->withStatus(400);
+            // 🔒 Bloquear el turno para evitar duplicados
+            $stmt = $pdo->prepare("SELECT * FROM turnos_disponibles WHERE id = ? AND habilitado = 1 FOR UPDATE");
+            $stmt->execute([$data['turno_disponible_id']]);
+            $turnoDisponible = $stmt->fetch();
+
+            if (!$turnoDisponible || $turnoDisponible['disponible'] == 0) {
+                $pdo->rollBack();
+                $response->getBody()->write(json_encode(["error" => "El turno ya no está disponible."]));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+            }
+
+            // Verificar que la mascota pertenece al usuario
+            $stmt = $pdo->prepare("SELECT * FROM mascotas WHERE id = ? AND usuario_id = ?");
+            $stmt->execute([$data['mascota_id'], $usuario['id']]);
+            $mascota = $stmt->fetch();
+            if (!$mascota) {
+                $pdo->rollBack();
+                $response->getBody()->write(json_encode(["error" => "La mascota no pertenece al usuario logueado."]));
+                return $response->withStatus(403);
+            }
+
+            // 👉 Insertar turno con motivo
+            $stmt = $pdo->prepare("INSERT INTO turnos (usuario_id, mascota_id, turno_disponible_id, motivo, descripcion) 
+                                VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([
+                $usuario['id'],
+                $data['mascota_id'],
+                $data['turno_disponible_id'],
+                $data['motivo'] ?? null,       // motivo debe existir en la DB
+                $data['descripcion'] ?? null
+            ]);
+
+            // 👉 Marcar el turno como no disponible
+            $stmt = $pdo->prepare("UPDATE turnos_disponibles SET disponible = 0 WHERE id = ?");
+            $stmt->execute([$data['turno_disponible_id']]);
+
+            // 🚀 Confirmamos la transacción
+            $pdo->commit();
+
+            $response->getBody()->write(json_encode(["mensaje" => "Turno solicitado exitosamente."]));
+            return $response->withHeader('Content-Type', 'application/json');
+        } catch (Exception $e) {
+            $pdo->rollBack();
+            // ⚠️ devolvemos detalle del error SQL para debug
+            $response->getBody()->write(json_encode([
+                "error" => "Error al solicitar turno",
+                "detalle" => $e->getMessage()
+            ]));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
         }
-
-        $stmt = $pdo->prepare("SELECT * FROM mascotas WHERE id = ? AND usuario_id = ?");
-        $stmt->execute([$data['mascota_id'], $usuario['id']]);
-        $mascota = $stmt->fetch();
-        if (!$mascota) {
-            $response->getBody()->write(json_encode(["error" => "La mascota no pertenece al usuario logueado."]));
-            return $response->withStatus(403);
-        }
-
-        // 👉 Insert con motivo incluido
-        $stmt = $pdo->prepare("INSERT INTO turnos (usuario_id, mascota_id, turno_disponible_id, motivo, descripcion) 
-                            VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([
-            $usuario['id'],
-            $data['mascota_id'],
-            $data['turno_disponible_id'],
-            $data['motivo'],         // nuevo campo
-            $data['descripcion'] ?? null
-        ]);
-
-        // Marcar como ocupado
-        $stmt = $pdo->prepare("UPDATE turnos_disponibles SET disponible = 0 WHERE id = ?");
-        $stmt->execute([$data['turno_disponible_id']]);
-
-        $response->getBody()->write(json_encode(["mensaje" => "Turno solicitado exitosamente."]));
     }
 
     public static function CancelarTurno($request, $response, $args) {
@@ -183,37 +205,37 @@ class TurnoController {
     }
 
     public static function VerMisTurnos($request, $response, $args) {
-    $pdo = Conexion::obtenerConexion();
-    $token = $request->getAttribute('jwt');
+        $pdo = Conexion::obtenerConexion();
+        $token = $request->getAttribute('jwt');
 
-    if (!$token || !isset($token->email)) {
-        $response->getBody()->write(json_encode(["error" => "Token inválido o no proporcionado."]));
-        return $response->withStatus(401);
+        if (!$token || !isset($token->email)) {
+            $response->getBody()->write(json_encode(["error" => "Token inválido o no proporcionado."]));
+            return $response->withStatus(401);
+        }
+
+        $emailUsuario = $token->email;
+        $stmt = $pdo->prepare("SELECT id FROM usuarios WHERE email = ?");
+        $stmt->execute([$emailUsuario]);
+        $usuario = $stmt->fetch();
+
+        $stmt = $pdo->prepare("SELECT t.id, td.fecha, td.hora, t.estado, t.costo, 
+                                    t.motivo, t.descripcion, 
+                                    m.nombre AS mascota
+                            FROM turnos t 
+                            JOIN turnos_disponibles td ON t.turno_disponible_id = td.id 
+                            JOIN mascotas m ON t.mascota_id = m.id 
+                            WHERE t.usuario_id = ?");
+        $stmt->execute([$usuario['id']]);
+        $turnos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (empty($turnos)) {
+            $response->getBody()->write(json_encode(["mensaje" => "No tienes turnos registrados."]));
+            return $response->withStatus(200);
+        }
+
+        $response->getBody()->write(json_encode($turnos));
+        return $response;
     }
-
-    $emailUsuario = $token->email;
-    $stmt = $pdo->prepare("SELECT id FROM usuarios WHERE email = ?");
-    $stmt->execute([$emailUsuario]);
-    $usuario = $stmt->fetch();
-
-    $stmt = $pdo->prepare("SELECT t.id, td.fecha, td.hora, t.estado, t.costo, 
-                                  t.motivo, t.descripcion, 
-                                  m.nombre AS mascota
-                           FROM turnos t 
-                           JOIN turnos_disponibles td ON t.turno_disponible_id = td.id 
-                           JOIN mascotas m ON t.mascota_id = m.id 
-                           WHERE t.usuario_id = ?");
-    $stmt->execute([$usuario['id']]);
-    $turnos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    if (empty($turnos)) {
-        $response->getBody()->write(json_encode(["mensaje" => "No tienes turnos registrados."]));
-        return $response->withStatus(200);
-    }
-
-    $response->getBody()->write(json_encode($turnos));
-    return $response;
-}
 
 
     public function VerTodosLosTurnos(Request $request, Response $response, $args) {

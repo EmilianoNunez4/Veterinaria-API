@@ -196,7 +196,7 @@
       }
     });
 
-    // 👉 Confirmar turno
+        // Confirmar turno
     btnConfirmar.addEventListener("click", async () => {
       if (!horarioSeleccionado || !mascotaSelect.value || !document.getElementById("motivo").value) return;
 
@@ -218,25 +218,42 @@
           })
         });
 
-        const data = await res.json();
+        let data;
+        try {
+          data = await res.json();
+        } catch {
+          data = { mensaje: "Turno solicitado exitosamente." };
+        }
+
         if (data.error) {
           mensaje.className = "msg error";
           mensaje.textContent = data.error;
         } else {
           mensaje.className = "msg ok";
-          mensaje.textContent = data.mensaje;
-          // reset
-          fechaInput.value = "";
-          document.getElementById("motivo").value = "";
-          horariosContainer.innerHTML = "<p class='msg info'>Seleccioná una fecha para ver horarios disponibles.</p>";
-          document.getElementById("descripcion").value = "";
-          btnConfirmar.disabled = true;
+          mensaje.textContent = data.mensaje || "Turno solicitado exitosamente.";
+          Swal.fire({
+            icon: 'success',
+            title: '¡Turno pedido!',
+            html: `Turno solicitado exitosamente para la mascota <b>${mascotaSelect.options[mascotaSelect.selectedIndex].text}</b>`,
+            confirmButtonText: 'Cerrar',    
+            confirmButtonColor: '#3085d6',
+            allowOutsideClick: false
+          }).then(() => {
+            if (fechaInput.value) {
+              // 🔥 recarga la lista de horarios
+              fechaInput.dispatchEvent(new Event('change'));
+            } else {
+              location.reload();
+            }
+          });
+          setTimeout(() => location.reload(), 20000);
         }
       } catch {
         mensaje.className = "msg error";
         mensaje.textContent = "Error al solicitar el turno.";
       }
     });
+
 
     // 👉 Inicializar
     cargarMascotas();
@@ -246,5 +263,7 @@
       window.location.href = "login.html";
     }
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </body>
 </html>
