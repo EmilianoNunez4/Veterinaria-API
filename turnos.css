@@ -145,9 +145,49 @@ a.btn { text-align: center; }
 .turnos-hero .hero-sub { font-size: 1.15rem; margin: 0 0 6px; font-weight: 700; opacity: .95; }
 .turnos-hero .hero-lead { font-size: 1rem; opacity: .95; margin: 8px auto 16px; max-width: 780px; }
 
-/* Entrada suave del contenido */
-.fadeUp { opacity: 0; transform: translateY(14px); transition: opacity .6s cubic-bezier(.2,.9,.3,1), transform .6s cubic-bezier(.2,.9,.3,1); }
-.fadeUp.show { opacity: 1; transform: translateY(0); }
+/* Animación de fadeUp para el texto del banner */
+.fadeUp {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeSlideLeft 0.8s cubic-bezier(.43,1.2,.52,1) 0.35s both;
+}
+
+@keyframes fadeUpAnim {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.hero-title {
+  animation: fadeUp 0.8s cubic-bezier(.35,1.4,.38,1) 0.1s both;
+}
+.hero-sub {
+  animation: fadeSlideLeft 0.8s cubic-bezier(.43,1.2,.52,1) 0.35s both;
+}
+.hero-lead {
+  animation: fadeSlideRight 0.8s cubic-bezier(.43,1.2,.52,1) 0.55s both;
+}
+
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px);}
+  to   { opacity: 1; transform: translateY(0);}
+}
+@keyframes fadeSlideLeft {
+  from { opacity: 0; transform: translateX(40px);}
+  to   { opacity: 1; transform: translateX(0);}
+}
+@keyframes fadeSlideRight {
+  from { opacity: 0; transform: translateX(-40px);}
+  to   { opacity: 1; transform: translateX(0);}
+}
+@keyframes scaleIn {
+  0%   { opacity: 0; transform: scale(0.9);}
+  60%  { opacity: 1; transform: scale(1.05);}
+  100% { opacity: 1; transform: scale(1);}
+}
+
+
 
 /* =========================
    FORMULARIO DE TURNOS
