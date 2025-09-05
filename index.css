@@ -33,6 +33,52 @@ nav a:hover::after, nav a:focus::after { width: 80%; }
   .logo { justify-content: center; margin-bottom: 10px;}
 }
 
+
+/* --- Submenu --- */
+nav ul li.submenu {
+  position: relative;
+}
+
+nav ul li.submenu > .submenu-items {
+  display: none;
+  position: absolute;
+  top: 100%; /* justo debajo del link */
+  left: 0;
+  background: #fff;
+  list-style: none;
+  padding: 8px 0;
+  margin: 0;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  z-index: 1000;
+  min-width: 180px;
+}
+
+nav ul li.submenu > .submenu-items li {
+  width: 100%;
+}
+
+nav ul li.submenu > .submenu-items li a {
+  display: block;
+  padding: 10px 15px;
+  color: #333;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+nav ul li.submenu > .submenu-items li a:hover {
+  background: #f0f0f0;
+  color: #000;
+  font-weight: 500;
+}
+
+/* Mostrar cuando paso el mouse */
+nav ul li.submenu:hover > .submenu-items {
+  display: block;
+}
+
+
+
 /* ================= HERO / BANNER PRINCIPAL ================= */
 .hero-hero {
   position: relative;

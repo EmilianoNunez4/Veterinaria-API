@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Veterinaria - Turnos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="turnos.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body onload="requireLogin()">
+<script>
+  function requireLogin() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Debes iniciar sesión para acceder.");
+      window.location.href = "login.html";
+    }
+  }
+</script>
+
+  <!-- HEADER -->
+  <header>
+    <nav>
+      <div class="logo">
+        <img src="src/logovet-Photoroom.png" alt="logo-empresa" class="logimg">
+        <span class="logo-text" style="font-weight: bold;">Veterinaria San Jorge</span>
+      </div>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="mascotas.html">Mascotas</a></li>
+        <li class="submenu">
+          <a href="turnos.html" class="active">Turnos</a>
+          <ul class="submenu-items">
+            <li><a href="mis-turnos.html">Ver mis turnos</a></li>
+            <li><a href="turnos.html">Pedir turnos</a></li>
+          </ul>
+        </li>
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="login.html" onclick="cerrarSesion()">Salir</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="turnos-hero1 hero-hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content fadeUp show">
+      <h1 class="hero-title">Mis Turnos</h1>
+      <p class="hero-sub">¡Bienvenido! Aquí puedes ver tus turnos</p>
+      <p class="hero-lead">Veras por fecha, por mascota, por motivo y por el horario en el que hayas solicitado.</p>
+    </div>
+  </section>
+
+  <!-- MAIN -->
+  <main class="turnos-main">
+    <div class="turnos-container" >
+        <h1 style="text-align: center;">Turnos</h1>
+        <p style="text-align: center;">Aqui veras tus turnos solicitados.</p>
+    <div class="turnos-container" id="turnosContainer">
+      <!-- Turnos cargados dinámicamente -->
+    </div>
+    </div>
+  </main>
+
+<script>
+async function cargarMisTurnos() {
+  const res = await fetch("http://localhost/crud/turnos/mis-turnos", {
+    method: "GET",
+    headers: {
+      "Authorization": "Bearer " + localStorage.getItem("token")
+    }
+  });
+
+  const data = await res.json();
+  const cont = document.getElementById("turnosContainer");
+  cont.innerHTML = "";
+
+  if (data.mensaje) {
+    cont.innerHTML = `<p>${data.mensaje}</p>`;
+    return;
+  }
+
+  data.forEach(turno => {
+    const card = document.createElement("div");
+    card.className = "turno-card";
+    card.innerHTML = `
+      <div class="turno-fecha">
+        <span class="dia">${new Date(turno.fecha).getDate()}</span>
+        <span class="mes">${new Date(turno.fecha).toLocaleDateString('es-ES', { weekday: 'long' })}</span>
+        <span class="hora">${turno.hora}</span>
+      </div>
+
+      <div class="turno-info">
+        <p><strong>Paciente:</strong> ${turno.mascota}.</p>
+        <p><strong>Especie:</strong> ${turno.especie}.</p>
+        <p><strong>Descripción:</strong> ${turno.motivo}.</p>
+        <p><strong>Estado:</strong> ${turno.estado}.</p>
+        <div class="turno-actions">
+          <button class="btn-cancelar" onclick="cancelarTurno(${turno.id})">
+            <i class="fas fa-trash-alt"></i> Cancelar
+          </button>
+        </div>
+      </div>
+    `;
+    cont.appendChild(card);
+  });
+}
+
+// 🚀 Cancelar turno
+async function cancelarTurno(id) {
+  Swal.fire({
+    icon: "warning",
+    title: "¿Cancelar turno?",
+    text: "Esta acción no se puede deshacer",
+    showCancelButton: true,
+    confirmButtonText: "Sí, cancelar",
+    cancelButtonText: "No",
+    confirmButtonColor: "#e74c3c"
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      // 🔧 Endpoint de cancelar turno
+      await fetch(`http://localhost/crud/turnos/cancelar/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem("token")
+        }
+      });
+      Swal.fire("Cancelado", "Tu turno ha sido cancelado.", "success");
+      cargarMisTurnos();
+    }
+  });
+}
+
+function cerrarSesion() {
+  localStorage.removeItem("token");
+  window.location.href = "login.html";
+}
+
+// Cargar turnos al entrar
+cargarMisTurnos();
+</script>
+
+  <!-- FOOTER -->
+  <footer class="footer-vet">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <span class="footer-logo"></span>
+        <span class="footer-title">
+          Veterinaria <br> San Jorge
+        </span>
+      </div>
+      <div class="footer-col">
+        <h3>Nosotros</h3>
+        <p>
+          Tu veterinaria de confianza.<br>
+          Atención cálida y personalizada.<br>
+          Experiencia y profesionalismo.<br>
+          ¡Gracias por confiar en nosotros!
+        </p>
+      </div>
+      <div class="footer-col">
+        <h3>Términos y Condiciones</h3>
+        <ul>
+          <li><a href="#">Política de privacidad</a></li>
+          <li><a href="#">Uso del sitio</a></li>
+          <li><a href="#">Turnos y servicios</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Contacto</h3>
+        <ul>
+          <li>+54 11 1234-5678</li>
+          <li>info@veterinaria.com</li>
+          <li>Av. Principal 1234, Buenos Aires</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-copy">
+      © 2025 Veterinaria. Todos los derechos reservados.
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

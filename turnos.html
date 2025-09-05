@@ -28,7 +28,13 @@
       <ul>
         <li><a href="index.html">Inicio</a></li>
         <li><a href="mascotas.html">Mascotas</a></li>
-        <li><a href="turnos.html" class="active">Turnos</a></li>
+         <li class="submenu">
+            <a href="turnos.html" class="active">Turnos</a>
+            <ul class="submenu-items">
+      <li><a href="misturnos.html">Ver mis turnos</a></li>
+      <li><a href="turnos.html">Pedir turnos</a></li>
+    </ul>
+  </li>
         <li><a href="#servicios">Servicios</a></li>
         <li><a href="login.html" onclick="cerrarSesion()">Salir</a></li>
       </ul>
@@ -127,7 +133,7 @@
     </div>
   </footer>
 
-  <!-- SCRIPT -->
+  <!-- SCRIPT PEDIR TURNOS -->
   <script>
     const fechaInput = document.getElementById("fecha");
     const horariosContainer = document.getElementById("horarios");
@@ -263,7 +269,7 @@
       window.location.href = "login.html";
     }
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

@@ -218,9 +218,9 @@ class TurnoController {
         $stmt->execute([$emailUsuario]);
         $usuario = $stmt->fetch();
 
-        $stmt = $pdo->prepare("SELECT t.id, td.fecha, td.hora, t.estado, t.costo, 
-                                    t.motivo, t.descripcion, 
-                                    m.nombre AS mascota
+        $stmt = $pdo->prepare("SELECT t.id, td.fecha, td.hora, t.estado, t.costo, t.motivo, t.descripcion, 
+                                    m.nombre AS mascota,
+                                    m.nombre AS mascota, m.especie
                             FROM turnos t 
                             JOIN turnos_disponibles td ON t.turno_disponible_id = td.id 
                             JOIN mascotas m ON t.mascota_id = m.id 

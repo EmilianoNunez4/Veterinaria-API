@@ -5,6 +5,7 @@
   <title>Veterinaria - Inicio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
   <!-- HEADER -->
@@ -15,13 +16,22 @@
       <img src="src/logovet-Photoroom.png" alt="logo-empresa" class="logimg">
       <span class="logo-text" style="font-weight: bold;">Veterinaria San Jorge</span>
     </div>
-    <ul>
-      <li><a href="index.html">Inicio</a></li>
-      <li><a href="mascotas.html">Mascotas</a></li>
-      <li><a href="turnos.html">Turnos</a></li>
-      <li><a href="#servicios-carousel">Servicios</a></li>
-      <li><a href="#" id="authLink"></a></li>
-    </ul>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="mascotas.html">Mascotas</a></li>
+
+          <!-- Turnos con submenu -->
+          <li class="submenu">
+            <a href="turnos.html" class="active">Turnos</a>
+            <ul class="submenu-items">
+              <li><a href="misturnos.html" style="text-align: center;">Ver mis turnos</a></li>
+              <li><a href="turnos.html"  style="text-align: center;">Pedir turnos</a></li>
+            </ul>
+          </li>
+
+          <li><a href="#servicios-carousel">Servicios</a></li>
+          <li><a id="authLink" href="login.html">Iniciar Sesión</a></li>
+        </ul>
   </nav>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
@@ -78,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
     <p class="hero-lead">Somos un equipo de profesionales comprometidos con cada mascota. Atención de calidad, humana y cercana.</p>
     <div class="hero-ctas">
       <a class="btn btn-primary" href="turnos.html" onclick="checkAuth(event)">Reservar Turno</a>
-      <a class="btn btn-outline" href="#servicios">Conocé Más</a>
+      <a class="btn btn-outline" href="#servicios-carousel">Conocé Más</a>
     </div>
   </div>
   <div class="hero-bottom-bar"></div>
