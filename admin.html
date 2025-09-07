@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel de Administración - Veterinaria</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="admin.css">
+
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>Panel Admin</h2>
+    <a href="#" onclick="mostrarSeccion('usuarios')" class="active">Usuarios</a>
+    <a href="#" onclick="mostrarSeccion('mascotas')">Mascotas</a>
+    <a href="#" onclick="mostrarSeccion('turnos-disponibles')">Turnos disponibles</a>
+    <a href="#" onclick="mostrarSeccion('turnos-pedidos')">Turnos pedidos</a>
+  </div>
+
+  <!-- Contenido -->
+  <div class="content">
+    <h1>Administración de Veterinaria</h1>
+    <p>Bienvenido, aquí puedes gestionar usuarios, mascotas y turnos.</p>
+
+    <!-- Secciones -->
+    <div id="usuarios" class="section active">
+      <h2>Usuarios</h2>
+      <div id="tablaUsuarios">Cargando usuarios...</div>
+    </div>
+
+    <div id="mascotas" class="section">
+      <h2>Mascotas</h2>
+      <div id="tablaMascotas">Cargando mascotas...</div>
+    </div>
+
+    <div id="turnos-disponibles" class="section">
+      <h2>Turnos disponibles</h2>
+      <div id="tablaTurnosDisponibles">Cargando turnos disponibles...</div>
+    </div>
+
+    <div id="turnos-pedidos" class="section">
+      <h2>Turnos pedidos</h2>
+      <div id="tablaTurnosPedidos">Cargando turnos pedidos...</div>
+    </div>
+  </div>
+
+  <script>
+    // Cambiar entre secciones
+    function mostrarSeccion(id) {
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+      document.querySelectorAll('.sidebar a').forEach(link => link.classList.remove('active'));
+
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+async function cargarUsuarios() {
+  try {
+    const res = await fetch(`http://localhost/crud/usuarios/todos`, {
+      method: "GET",
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      }
+    });
+
+    const data = await res.json();
+    const contenedor = document.getElementById("tablaUsuarios");
+
+    if (!Array.isArray(data) || data.length === 0) {
+      contenedor.innerHTML = "<p>No hay usuarios registrados.</p>";
+      return;
+    }
+
+    let html = `
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Fecha Registro</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    data.forEach(u => {
+      html += `
+        <tr>
+          <td>${u.id}</td>
+          <td>${u.nombre}</td>
+          <td>${u.email}</td>
+          <td>${u.rol}</td>
+          <td>${u.fecha_registro}</td>
+        </tr>
+      `;
+    });
+
+    html += `</tbody></table>`;
+    contenedor.innerHTML = html;
+
+  } catch (err) {
+    console.error(err);
+    Swal.fire("Error", "No se pudieron cargar los usuarios", "error");
+  }
+}
+
+// 🚀 Llamar al cargar la página
+cargarUsuarios();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+  body {
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 250px;
+      background-color: #2c3e50;
+      color: white;
+      padding: 20px;
+    }
+    .sidebar h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .sidebar a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      padding: 10px;
+      margin-bottom: 5px;
+      border-radius: 5px;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background-color: #34495e;
+    }
+    .content {
+      flex: 1;
+      padding: 20px;
+      background-color: #ecf0f1;
+    }
+    .section {
+      display: none;
+    }
+    .section.active {
+      display: block;
+    }
