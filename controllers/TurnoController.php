@@ -5,29 +5,58 @@ require_once './db/conexion.php';
 
 class TurnoController {
 
-    public static function VerTurnosDisponibles($request, $response, $args) {
-        $data = $request->getParsedBody();
-        if (!$data || !isset($data['fecha'])) {
-            $response->getBody()->write(json_encode(["error" => "Debe proporcionar una fecha."]));
-            return $response->withStatus(400);
-        }
+public static function VerTurnosDisponibles($request, $response, $args) {
+    $token = $request->getAttribute('jwt');
 
-        $pdo = Conexion::obtenerConexion();
+    // validar que sea admin
+    if (!$token || !isset($token->rol) || $token->rol !== 'admin') {
+        $response->getBody()->write(json_encode(["error" => "Acceso denegado."]));
+        return $response->withStatus(403);
+    }
+
+    $pdo = Conexion::obtenerConexion();
+    $data = $request->getParsedBody();
+    $horariosFijos = ['09:30:00', '10:30:00', '11:30:00', '13:30:00', '14:30:00', '15:30:00'];
+
+    if ($data && isset($data['fecha'])) {
+        // ✅ Modo usuario → turnos por fecha
         $fecha = $data['fecha'];
-        $horariosFijos = ['09:30:00', '10:30:00', '11:30:00', '13:30:00', '14:30:00', '15:30:00'];
-        $stmt = $pdo->prepare("SELECT id, hora FROM turnos_disponibles WHERE fecha = ? AND habilitado = 1 AND disponible = 1 AND hora IN ('09:30:00', '10:30:00', '11:30:00', '13:30:00', '14:30:00', '15:30:00')");
+        $stmt = $pdo->prepare("
+            SELECT id, fecha, hora, habilitado, disponible
+            FROM turnos_disponibles
+            WHERE fecha = ? 
+              AND habilitado = 1 
+              AND disponible = 1
+              AND hora IN ('09:30:00','10:30:00','11:30:00','13:30:00','14:30:00','15:30:00')
+            ORDER BY fecha, hora
+        ");
         $stmt->execute([$fecha]);
-        $turnosDisponibles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        // ✅ Modo admin → todos los turnos sin filtrar por fecha
+        $stmt = $pdo->prepare("
+            SELECT id, fecha, hora, habilitado, disponible
+            FROM turnos_disponibles
+            WHERE habilitado = 1 
+              AND disponible = 1
+              AND hora IN ('09:30:00','10:30:00','11:30:00','13:30:00','14:30:00','15:30:00')
+            ORDER BY fecha, hora
+        ");
+        $stmt->execute();
+    }
 
-        if (empty($turnosDisponibles)) {
+    $turnosDisponibles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if (empty($turnosDisponibles)) {
         $response->getBody()->write(json_encode([
-            "mensaje" => "No hay turnos disponibles para la fecha seleccionada."
+            "mensaje" => "No hay turnos disponibles."
         ]));
         return $response->withStatus(200);
-        }
-        $response->getBody()->write(json_encode($turnosDisponibles));
-        return $response;
     }
+
+    $response->getBody()->write(json_encode($turnosDisponibles));
+    return $response->withHeader('Content-Type', 'application/json');
+}
+
 
     public static function HabilitarTurnosPorRango($request, $response, $args) {
         $data = $request->getParsedBody();

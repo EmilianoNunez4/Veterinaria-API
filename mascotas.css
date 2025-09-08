@@ -445,7 +445,7 @@ nav ul li.submenu:hover > .submenu-items {
   .footer-brand { font-size: 1.5em; }
 }
 @media (max-width: 600px) {
-  .footer-main { padding: 0 2vw 18px 2vw; }
+  .footer-main { padding: 0 2vw 18px 2vw; padding-left: 30px;}
   .footer-col { min-width: unset; }
 }
 

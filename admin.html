@@ -10,17 +10,51 @@
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 </head>
 <body>
+<!-- cerrar seesion -->
+<script>
+  function cerrarSesion() {
+  Swal.fire({
+    title: "¿Seguro que quieres cerrar sesión?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sí, salir",
+    cancelButtonText: "Cancelar"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      localStorage.removeItem("token");
+      window.location.href = "login.html"; 
+    }
+  });
+}
 
+// 🔒 Protección de acceso: si no hay token, redirige al login
+document.addEventListener("DOMContentLoaded", () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    Swal.fire({
+      title: "Sesión expirada",
+      text: "Por favor inicia sesión nuevamente.",
+      icon: "warning",
+      confirmButtonText: "OK"
+    }).then(() => {
+      window.location.href = "login.html";
+    });
+  }
+});
+
+</script>
 <!-- Sidebar -->
 <div class="sidebar">
   <h2>Panel Admin</h2>
   <a href="#" onclick="mostrarSeccion('usuarios')" class="active">Usuarios</a>
   <a href="#" onclick="mostrarSeccion('mascotas')">Mascotas</a>
-  <a href="#" onclick="mostrarSeccion('turnos-cargar')">Cargar Turnos Disponibles</a>
+  <a href="#" onclick="mostrarSeccion('turnos-cargar')">Turnos Disponibles</a>
   <a href="#" onclick="mostrarSeccion('turnos-habilitar')">Habilitar Turnos (Fechas)</a>
   <a href="#" onclick="mostrarSeccion('turnos-deshabilitar')">Deshabilitar Día</a>
   <a href="#" onclick="mostrarSeccion('turnos-pedidos')">Turnos Pedidos</a>
   <a href="#" onclick="mostrarSeccion('turnos-calendario')">Calendario</a>
+  <hr>
+  <button class="btn btn-danger w-100 mt-3" onclick="cerrarSesion()">Cerrar sesión</button>
 </div>
 
 <!-- Contenido -->
@@ -42,7 +76,7 @@
 
   <!-- Cargar Turnos Disponibles -->
   <div id="turnos-cargar" class="section">
-    <h2>Cargar Turnos Disponibles</h2>
+    <h2>Turnos Disponibles</h2>
     <div id="tablaTurnosDisponibles">Cargando turnos disponibles...</div>
   </div>
 
@@ -154,9 +188,12 @@ async function cargarMascotas() {
 async function cargarTurnosDisponibles() {
   try {
     const res = await fetch("http://localhost/crud/turnos/disponibles", {
-      method: "GET",
-      headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+      method: "POST",
+      headers: { 
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      }
     });
+
     const data = await res.json();
     const cont = document.getElementById("tablaTurnosDisponibles");
 
@@ -165,22 +202,36 @@ async function cargarTurnosDisponibles() {
       return;
     }
 
-    let html = `<table class="table table-bordered"><thead>
-      <tr><th>ID</th><th>Fecha</th><th>Hora</th><th>Habilitado</th></tr></thead><tbody>`;
+    let html = `<table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Habilitado</th>
+          <th>Disponible</th>
+        </tr>
+      </thead>
+      <tbody>`;
+    
     data.forEach(t => {
-      html += `<tr>
-        <td>${t.id}</td>
-        <td>${t.fecha}</td>
-        <td>${t.hora}</td>
-        <td>${t.habilitado == 1 ? "Sí" : "No"}</td>
-      </tr>`;
+      html += `
+        <tr>
+          <td>${t.id}</td>
+          <td>${t.fecha}</td>
+          <td>${t.hora}</td>
+          <td>${t.habilitado == 1 ? "Sí" : "No"}</td>
+          <td>${t.disponible == 1 ? "Sí" : "No"}</td>
+        </tr>`;
     });
+
     html += "</tbody></table>";
     cont.innerHTML = html;
+
   } catch (err) { 
     console.error("Error cargando turnos disponibles:", err); 
-  }
-}
+  };
+};
 
 async function habilitarTurnosPorFechasUI() {
   const fechaInicio = document.getElementById("fechaInicio").value;
@@ -263,19 +314,29 @@ async function cargarTurnosPedidos() {
   }
 }
 
-
 async function guardarTurno(id) {
   const estado = document.getElementById(`estado-${id}`).value;
   const costo = document.getElementById(`costo-${id}`).value;
+
   try {
-    const res = await fetch("http://localhost/crud/turnos/cambiar-estado", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token") },
+    const res = await fetch("http://localhost/crud/turnos/cambiar-estado", { 
+      method: "POST", // 👈 CAMBIAR PATCH por POST
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      },
       body: JSON.stringify({ id, estado, costo })
     });
-    if (res.ok) { Swal.fire("Éxito","Turno actualizado","success"); cargarTurnosPedidos(); }
-    else Swal.fire("Error","No se pudo actualizar","error");
-  } catch (err) { console.error(err); }
+
+    if (res.ok) {
+      Swal.fire("Éxito","Turno actualizado","success");
+      cargarTurnosPedidos(); // recargar tabla
+    } else {
+      Swal.fire("Error","No se pudo actualizar","error");
+    }
+  } catch (err) { 
+    console.error(err); 
+  }
 }
 
 function buscarTurnosPedidos() {
@@ -349,10 +410,10 @@ function inicializarCalendario() {
               costo: t.costo,
               estado: t.estado
             },
-            color: t.estado === "confirmado" ? "green" :
+            color:
                    t.estado === "pendiente"  ? "orange" :
                    t.estado === "cancelado"  ? "red" :
-                   t.estado === "asistido"   ? "blue" : "gray"
+                   t.estado === "asistido"   ? "green" : "gray"
           }));
 
         successCallback(events);
@@ -377,7 +438,6 @@ function inicializarCalendario() {
           <label>Estado:</label>
           <select id="estado" class="swal2-input">
             <option value="pendiente" ${turno.estado === "pendiente" ? "selected" : ""}>Pendiente</option>
-            <option value="confirmado" ${turno.estado === "confirmado" ? "selected" : ""}>Confirmado</option>
             <option value="asistido" ${turno.estado === "asistido" ? "selected" : ""}>Asistido</option>
             <option value="cancelado" ${turno.estado === "cancelado" ? "selected" : ""}>Cancelado</option>
           </select>

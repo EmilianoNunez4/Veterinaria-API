@@ -21,7 +21,7 @@ header('Content-Type: application/json');
 
 // CORS Headers
 header("Access-Control-Allow-Origin: *"); // o poné tu origen específico
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS, PATCH");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 // Opcional: manejar preflight
