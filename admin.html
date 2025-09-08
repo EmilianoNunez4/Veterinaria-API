@@ -6,111 +6,443 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="admin.css">
-
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 </head>
 <body>
 
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <h2>Panel Admin</h2>
-    <a href="#" onclick="mostrarSeccion('usuarios')" class="active">Usuarios</a>
-    <a href="#" onclick="mostrarSeccion('mascotas')">Mascotas</a>
-    <a href="#" onclick="mostrarSeccion('turnos-disponibles')">Turnos disponibles</a>
-    <a href="#" onclick="mostrarSeccion('turnos-pedidos')">Turnos pedidos</a>
+<!-- Sidebar -->
+<div class="sidebar">
+  <h2>Panel Admin</h2>
+  <a href="#" onclick="mostrarSeccion('usuarios')" class="active">Usuarios</a>
+  <a href="#" onclick="mostrarSeccion('mascotas')">Mascotas</a>
+  <a href="#" onclick="mostrarSeccion('turnos-cargar')">Cargar Turnos Disponibles</a>
+  <a href="#" onclick="mostrarSeccion('turnos-habilitar')">Habilitar Turnos (Fechas)</a>
+  <a href="#" onclick="mostrarSeccion('turnos-deshabilitar')">Deshabilitar Día</a>
+  <a href="#" onclick="mostrarSeccion('turnos-pedidos')">Turnos Pedidos</a>
+  <a href="#" onclick="mostrarSeccion('turnos-calendario')">Calendario</a>
+</div>
+
+<!-- Contenido -->
+<div class="content">
+  <h1>Administración de Veterinaria</h1>
+  <p>Bienvenido, aquí puedes gestionar usuarios, mascotas y turnos.</p>
+
+  <!-- Usuarios -->
+  <div id="usuarios" class="section active">
+    <h2>Usuarios</h2>
+    <div id="tablaUsuarios">Cargando usuarios...</div>
   </div>
 
-  <!-- Contenido -->
-  <div class="content">
-    <h1>Administración de Veterinaria</h1>
-    <p>Bienvenido, aquí puedes gestionar usuarios, mascotas y turnos.</p>
+  <!-- Mascotas -->
+  <div id="mascotas" class="section">
+    <h2>Mascotas</h2>
+    <div id="tablaMascotas">Cargando mascotas...</div>
+  </div>
 
-    <!-- Secciones -->
-    <div id="usuarios" class="section active">
-      <h2>Usuarios</h2>
-      <div id="tablaUsuarios">Cargando usuarios...</div>
-    </div>
+  <!-- Cargar Turnos Disponibles -->
+  <div id="turnos-cargar" class="section">
+    <h2>Cargar Turnos Disponibles</h2>
+    <div id="tablaTurnosDisponibles">Cargando turnos disponibles...</div>
+  </div>
 
-    <div id="mascotas" class="section">
-      <h2>Mascotas</h2>
-      <div id="tablaMascotas">Cargando mascotas...</div>
-    </div>
+  <!-- Habilitar Turnos por Fechas -->
+  <div id="turnos-habilitar" class="section">
+    <h2>Habilitar Turnos por Fechas</h2>
+    <label>Desde fecha: <input type="date" id="fechaInicio"></label>
+    <label>Hasta fecha: <input type="date" id="fechaFin"></label>
+    <button class="btn btn-success btn-sm" onclick="habilitarTurnosPorFechasUI()">Generar Turnos</button>
+  </div>
 
-    <div id="turnos-disponibles" class="section">
-      <h2>Turnos disponibles</h2>
-      <div id="tablaTurnosDisponibles">Cargando turnos disponibles...</div>
-    </div>
+  <!-- Deshabilitar Día -->
+  <div id="turnos-deshabilitar" class="section">
+    <h2>Deshabilitar Turnos por Día</h2>
+    <label>Seleccione fecha: <input type="date" id="fechaDeshabilitar"></label>
+    <button class="btn btn-danger btn-sm" onclick="deshabilitarDiaUI()">Deshabilitar Día</button>
+  </div>
 
+  <!-- Turnos Pedidos -->
     <div id="turnos-pedidos" class="section">
-      <h2>Turnos pedidos</h2>
-      <div id="tablaTurnosPedidos">Cargando turnos pedidos...</div>
+    <h2>Turnos Pedidos</h2>
+    
+    <!-- Buscador -->
+    <div class="mb-3">
+        <input type="text" id="buscadorTurnos" class="form-control" placeholder="Buscar por usuario o mascota..." onkeyup="buscarTurnosPedidos()">
+    </div>
+    
+    <div id="tablaTurnosPedidos">Cargando turnos pedidos...</div>
+    </div>
+
+  <!-- Calendario -->
+<div id="turnos-calendario" class="section">
+  <h2>Calendario de Turnos</h2>
+  <div id="loading-calendar" style="display:none; text-align:center; padding:20px;">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
     </div>
   </div>
+  <div id="calendario"></div>
+</div>
 
-  <script>
-    // Cambiar entre secciones
-    function mostrarSeccion(id) {
-      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-      document.querySelectorAll('.sidebar a').forEach(link => link.classList.remove('active'));
+<script>
+/* ---------------- Cambiar entre secciones ---------------- */
+function mostrarSeccion(id) {
+  document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+  document.querySelectorAll('.sidebar a').forEach(link => link.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
 
-      document.getElementById(id).classList.add('active');
-      event.target.classList.add('active');
-    }
-
+/* ---------------- Usuarios ---------------- */
 async function cargarUsuarios() {
   try {
     const res = await fetch(`http://localhost/crud/usuarios/todos`, {
       method: "GET",
-      headers: {
-        "Authorization": "Bearer " + localStorage.getItem("token")
-      }
+      headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
     });
-
     const data = await res.json();
-    const contenedor = document.getElementById("tablaUsuarios");
+    const cont = document.getElementById("tablaUsuarios");
 
     if (!Array.isArray(data) || data.length === 0) {
-      contenedor.innerHTML = "<p>No hay usuarios registrados.</p>";
+      cont.innerHTML = "<p>No hay usuarios registrados.</p>";
       return;
     }
 
-    let html = `
-      <table class="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Rol</th>
-            <th>Fecha Registro</th>
-          </tr>
-        </thead>
-        <tbody>
-    `;
-
+    let html = `<table class="table table-bordered table-striped">
+      <thead><tr><th>ID</th><th>Nombre</th><th>Email</th><th>Rol</th><th>Fecha Registro</th></tr></thead><tbody>`;
     data.forEach(u => {
-      html += `
-        <tr>
-          <td>${u.id}</td>
-          <td>${u.nombre}</td>
-          <td>${u.email}</td>
-          <td>${u.rol}</td>
-          <td>${u.fecha_registro}</td>
-        </tr>
-      `;
+      html += `<tr>
+        <td>${u.id}</td><td>${u.nombre}</td><td>${u.email}</td><td>${u.rol}</td><td>${u.fecha_registro}</td>
+      </tr>`;
     });
-
     html += `</tbody></table>`;
-    contenedor.innerHTML = html;
+    cont.innerHTML = html;
+  } catch (err) { console.error(err); }
+}
 
-  } catch (err) {
-    console.error(err);
-    Swal.fire("Error", "No se pudieron cargar los usuarios", "error");
+/* ---------------- Mascotas ---------------- */
+async function cargarMascotas() {
+  try {
+    const res = await fetch(`http://localhost/crud/mascotas/ver-mascotas`, {
+      method: "GET",
+      headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+    });
+    const data = await res.json();
+    const cont = document.getElementById("tablaMascotas");
+
+    if (!Array.isArray(data) || data.length === 0) {
+      cont.innerHTML = "<p>No hay mascotas registradas.</p>";
+      return;
+    }
+
+    let html = `<table class="table table-bordered table-striped">
+      <thead><tr><th>ID</th><th>Nombre</th><th>Especie</th><th>Descripción</th><th>Foto</th><th>Propietario</th></tr></thead><tbody>`;
+    data.forEach(m => {
+      html += `<tr>
+        <td>${m.id}</td><td>${m.nombre}</td><td>${m.especie}</td>
+        <td>${m.descripcion ?? ''}</td>
+        <td>${m.foto ? `<img src="${m.foto}" style="width:50px;height:50px;border-radius:50%;">` : ''}</td>
+        <td>${m.propietario ?? ''} (${m.email ?? ''})</td>
+      </tr>`;
+    });
+    html += "</tbody></table>";
+    cont.innerHTML = html;
+  } catch (err) { console.error(err); }
+}
+
+/* ---------------- Turnos Disponibles ---------------- */
+async function cargarTurnosDisponibles() {
+  try {
+    const res = await fetch("http://localhost/crud/turnos/disponibles", {
+      method: "GET",
+      headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+    });
+    const data = await res.json();
+    const cont = document.getElementById("tablaTurnosDisponibles");
+
+    if (!Array.isArray(data) || data.length === 0) {
+      cont.innerHTML = "<p>No hay turnos disponibles.</p>";
+      return;
+    }
+
+    let html = `<table class="table table-bordered"><thead>
+      <tr><th>ID</th><th>Fecha</th><th>Hora</th><th>Habilitado</th></tr></thead><tbody>`;
+    data.forEach(t => {
+      html += `<tr>
+        <td>${t.id}</td>
+        <td>${t.fecha}</td>
+        <td>${t.hora}</td>
+        <td>${t.habilitado == 1 ? "Sí" : "No"}</td>
+      </tr>`;
+    });
+    html += "</tbody></table>";
+    cont.innerHTML = html;
+  } catch (err) { 
+    console.error("Error cargando turnos disponibles:", err); 
   }
 }
 
-// 🚀 Llamar al cargar la página
-cargarUsuarios();
+async function habilitarTurnosPorFechasUI() {
+  const fechaInicio = document.getElementById("fechaInicio").value;
+  const fechaFin = document.getElementById("fechaFin").value;
+  if (!fechaInicio || !fechaFin) {
+    return Swal.fire("Atención","Debes seleccionar las dos fechas","warning");
+  }
 
+  try {
+    const res = await fetch("http://localhost/crud/turnos/habilitar-turnos", {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      },
+      body: JSON.stringify({ fecha_inicio: fechaInicio, fecha_fin: fechaFin })              
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      Swal.fire("Éxito","Turnos generados","success");
+      cargarTurnosDisponibles();
+    } else {
+      Swal.fire("Error", data.message || "No se pudieron generar los turnos","error");
+    }
+  } catch (err) {
+    console.error(err);
+    Swal.fire("Error","Hubo un problema con la conexión","error");
+  }
+}
+
+async function deshabilitarDiaUI() {
+  const fecha = document.getElementById("fechaDeshabilitar").value;
+  if (!fecha) return Swal.fire("Atención","Debes seleccionar una fecha","warning");
+  try {
+    const res = await fetch("http://localhost/crud/turnos/deshabilitar-dia", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token") },
+      body: JSON.stringify({ fecha })
+    });
+    if (res.ok) { Swal.fire("Éxito","Día deshabilitado","success"); cargarTurnosDisponibles(); }
+    else Swal.fire("Error","No se pudo deshabilitar el día","error");
+  } catch (err) { console.error(err); }
+}
+
+/* ---------------- Turnos Pedidos ---------------- */
+async function cargarTurnosPedidos() {
+  try {
+    const res = await fetch("http://localhost/crud/turnos/todos", {
+      headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+    });
+    const data = await res.json();
+    console.log("Turnos pedidos:", data);  // 👈 ver en consola qué llega
+
+    const cont = document.getElementById("tablaTurnosPedidos");
+    if (!Array.isArray(data) || data.length === 0) {
+      cont.innerHTML = "<p>No hay turnos pedidos.</p>";
+      return;
+    }
+
+    let html = `<table class="table table-bordered"><thead>
+      <tr><th>ID</th><th>Usuario</th><th>Mascota</th><th>Fecha</th><th>Hora</th><th>Motivo</th><th>Estado</th><th>Costo</th></tr>
+      </thead><tbody>`;
+    data.forEach(t => {
+      html += `<tr>
+        <td>${t.id}</td>
+        <td>${t.usuario}</td>
+        <td>${t.mascota}</td>
+        <td>${t.fecha}</td>
+        <td>${t.hora}</td>
+        <td>${t.motivo ?? ""}</td>
+        <td>${t.estado}</td>
+        <td>${t.costo ?? ""}</td>
+      </tr>`;
+    });
+    html += "</tbody></table>";
+    cont.innerHTML = html;
+  } catch (err) { 
+    console.error("Error al cargar turnos pedidos:", err);
+  }
+}
+
+
+async function guardarTurno(id) {
+  const estado = document.getElementById(`estado-${id}`).value;
+  const costo = document.getElementById(`costo-${id}`).value;
+  try {
+    const res = await fetch("http://localhost/crud/turnos/cambiar-estado", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token") },
+      body: JSON.stringify({ id, estado, costo })
+    });
+    if (res.ok) { Swal.fire("Éxito","Turno actualizado","success"); cargarTurnosPedidos(); }
+    else Swal.fire("Error","No se pudo actualizar","error");
+  } catch (err) { console.error(err); }
+}
+
+function buscarTurnosPedidos() {
+  const input = document.getElementById("buscadorTurnos").value.toLowerCase().trim();
+  const filas = document.querySelectorAll("#tablaTurnosPedidos table tbody tr");
+
+  filas.forEach(fila => {
+    // armamos el texto de toda la fila
+    const textoFila = fila.textContent.toLowerCase();
+
+    // si el input está incluido en cualquier campo de la fila → mostrar
+    if (textoFila.includes(input)) {
+      fila.style.display = "";
+    } else {
+      fila.style.display = "none";
+    }
+  });
+}
+
+/* ---------------- FullCalendar ---------------- */
+let calendar; // 
+
+function mostrarSeccion(id) {
+  document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+  document.querySelectorAll('.sidebar a').forEach(link => link.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+
+  if (id === "turnos-calendario" && calendar) {
+    setTimeout(() => {
+      calendar.updateSize();
+      calendar.render();
+    }, 200);
+  }
+}
+
+function inicializarCalendario() {
+  const calendarEl = document.getElementById('calendario');
+  calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    locale: 'es',
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    },
+    buttonText: {
+      today: 'Hoy',
+      month: 'Mes',
+      week: 'Semana',
+      day: 'Día'
+    },
+    events: async (fetchInfo, successCallback, failureCallback) => {
+      document.getElementById("loading-calendar").style.display = "block";
+      try {
+        const res = await fetch("http://localhost/crud/turnos/todos", {
+          headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+        });
+        const data = await res.json();
+
+        const events = data
+          .filter(t => t.fecha && t.hora)
+          .map(t => ({
+            id: t.id,
+            title: `${t.mascota} - ${t.usuario}`,
+            start: `${t.fecha}T${t.hora}`,
+            extendedProps: {
+              usuario: t.usuario,
+              mascota: t.mascota,
+              motivo: t.motivo,
+              costo: t.costo,
+              estado: t.estado
+            },
+            color: t.estado === "confirmado" ? "green" :
+                   t.estado === "pendiente"  ? "orange" :
+                   t.estado === "cancelado"  ? "red" :
+                   t.estado === "asistido"   ? "blue" : "gray"
+          }));
+
+        successCallback(events);
+      } catch (err) {
+        console.error("Error cargando calendario:", err);
+        failureCallback(err);
+      } finally {
+        document.getElementById("loading-calendar").style.display = "none";
+      }
+    },
+    eventClick: function(info) {
+      const turno = info.event.extendedProps;
+
+      Swal.fire({
+        title: `${info.event.title}`,
+        html: `
+          <b>Fecha:</b> ${info.event.start.toLocaleDateString()}<br>
+          <b>Hora:</b> ${info.event.start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}<br>
+          <b>Usuario:</b> ${turno.usuario}<br>
+          <b>Mascota:</b> ${turno.mascota}<br>
+          <b>Motivo:</b> ${turno.motivo ?? ""}<br><br>
+          <label>Estado:</label>
+          <select id="estado" class="swal2-input">
+            <option value="pendiente" ${turno.estado === "pendiente" ? "selected" : ""}>Pendiente</option>
+            <option value="confirmado" ${turno.estado === "confirmado" ? "selected" : ""}>Confirmado</option>
+            <option value="asistido" ${turno.estado === "asistido" ? "selected" : ""}>Asistido</option>
+            <option value="cancelado" ${turno.estado === "cancelado" ? "selected" : ""}>Cancelado</option>
+          </select>
+          <label>Costo:</label>
+          <input type="number" id="costo" class="swal2-input"
+                 value="${turno.costo ?? ''}"
+                 placeholder="Introducir costo">
+        `,
+        showCancelButton: true,
+        confirmButtonText: "Guardar",
+        preConfirm: () => {
+          return {
+            estado: document.getElementById("estado").value,
+            costo: document.getElementById("costo").value
+          };
+        }
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            const res = await fetch("http://localhost/crud/turnos/cambiar-estado", {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("token")
+              },
+              body: JSON.stringify({
+                id: info.event.id,
+                estado: result.value.estado,
+                costo: result.value.costo || null
+              })
+            });
+
+            if (res.ok) {
+              Swal.fire("Éxito", "Turno actualizado", "success");
+
+              // actualizar evento en el calendario
+              info.event.setExtendedProp("estado", result.value.estado);
+              info.event.setExtendedProp("costo", result.value.costo);
+              info.event.setProp("color",
+                result.value.estado === "confirmado" ? "green" :
+                result.value.estado === "pendiente"  ? "orange" :
+                result.value.estado === "cancelado"  ? "red" :
+                result.value.estado === "asistido"   ? "blue" : "gray"
+              );
+            } else {
+              Swal.fire("Error", "No se pudo actualizar", "error");
+            }
+          } catch (err) {
+            console.error(err);
+            Swal.fire("Error", "Problema con la conexión", "error");
+          }
+        }
+      });
+    }
+  });
+
+  calendar.render();
+}
+
+/* ---------------- Inicialización ---------------- */
+cargarUsuarios();
+cargarMascotas();
+cargarTurnosDisponibles();
+cargarTurnosPedidos();
+inicializarCalendario();
 </script>
 
 </body>

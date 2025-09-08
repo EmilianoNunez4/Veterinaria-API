@@ -2,6 +2,7 @@
 
 require_once './db/conexion.php';
 
+
 class TurnoController {
 
     public static function VerTurnosDisponibles($request, $response, $args) {
@@ -237,28 +238,37 @@ class TurnoController {
         return $response;
     }
 
+    public static function VerTodosLosTurnos($request, $response, $args) {
+        $token = $request->getAttribute('jwt');
 
-    public function VerTodosLosTurnos(Request $request, Response $response, $args) {
-        $pdo = DB::getInstance();
-        $stmt = $pdo->query("SELECT t.id, td.fecha, td.hora, t.estado, t.costo, 
-                                    t.motivo, t.descripcion, 
-                                    m.nombre AS mascota, u.nombre AS usuario, u.email
-                            FROM turnos t
-                            JOIN turnos_disponibles td ON t.turno_disponible_id = td.id
-                            JOIN mascotas m ON t.mascota_id = m.id
-                            JOIN usuarios u ON t.usuario_id = u.id
-                            ORDER BY td.fecha, td.hora ASC");
-        $turnos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        if (!$turnos) {
-            $response->getBody()->write(json_encode(["mensaje" => "No hay turnos cargados"]));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        if (!$token || !isset($token->rol) || $token->rol !== 'admin') {
+            $response->getBody()->write(json_encode(["error" => "Acceso denegado."]));
+            return $response->withStatus(403);
         }
+
+        $pdo = Conexion::obtenerConexion();
+        $stmt = $pdo->query("
+            SELECT t.id,
+                u.nombre AS usuario,
+                m.nombre AS mascota,
+                td.fecha,
+                td.hora,
+                t.motivo,
+                t.estado,
+                t.costo,
+                t.descripcion,
+                t.fecha_creacion AS fecha_pedido
+            FROM turnos t
+            INNER JOIN usuarios u ON t.usuario_id = u.id
+            INNER JOIN mascotas m ON t.mascota_id = m.id
+            INNER JOIN turnos_disponibles td ON t.turno_disponible_id = td.id
+            ORDER BY td.fecha, td.hora
+        ");
+        $turnos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $response->getBody()->write(json_encode($turnos));
         return $response->withHeader('Content-Type', 'application/json');
     }
-
 
     public static function CambiarEstadoTurno($request, $response, $args) {
         $data = $request->getParsedBody();
