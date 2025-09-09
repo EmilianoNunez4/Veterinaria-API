@@ -8,62 +8,361 @@ body {
   -moz-osx-font-smoothing: grayscale; 
 }
 
-/* --- ESTILOS DEL HEADER Y FOOTER (se mantienen de tus archivos originales) --- */
-header { position: sticky; top: 0; z-index: 1000; background: #f6f5f7; border-bottom: 1px solid #eee; }
-nav { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 74px; }
-.logimg{ width: 100px; }
-.logo { display: flex; align-items: center; gap: 10px; }
-.logo-text { font-weight: 700; font-size: 1.22em; letter-spacing: 1px; color: #1b2e4b; }
-nav ul { list-style: none; display: flex; gap: 38px; margin: 0; padding: 0; }
-nav a { color: #1b2e4b; text-decoration: none; font-weight: 500; font-size: 1.07em; padding: 6px 0; position: relative; transition: color 0.22s; }
-nav a::after { content: ''; display: block; margin: 0 auto; height: 2px; width: 0; background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%); transition: width 0.22s; border-radius: 2px; }
-nav a:hover, nav a:focus { color: #ff4b2b; }
-nav a:hover::after, nav a:focus::after { width: 80%; }
-.barra1{ height: 80px; width: 100%; background-color: #fbf4f4; }
-.footer-vet { background: linear-gradient(90deg, #0a2449 0%, #103364 100%); color: #ffffff; padding-top: 38px; }
-
-/* --- Submenu --- */
-nav ul li.submenu {
-  position: relative;
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #f6f5f7;
+  border-bottom: 1px solid #eee;
 }
-
-nav ul li.submenu > .submenu-items {
-  display: none;
-  position: absolute;
-  top: 100%; /* justo debajo del link */
-  left: 0;
-  background: #fff;
-  list-style: none;
-  padding: 8px 0;
-  margin: 0;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+/* HEADER STICKY */
+.site-header {
+  position: sticky;
+  top: 0;
   z-index: 1000;
-  min-width: 180px;
+  background: #f6f6f6;
+  border-bottom: 1px solid #ddd;
 }
 
-nav ul li.submenu > .submenu-items li {
+/* NAVBAR BASE */
+.navbar {
+  max-width: 1200px;
+  height: 74px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* LOGO */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo {
+  height: 40px;
+}
+.brand-text {
+  font-weight: bold;
+  font-size: 18px;
+  color: #1b2e4b;
+}
+
+/* MENU LINKS */
+.navbar-menu {
+  list-style: none;
+  display: flex;
+  gap: 36px;
+}
+
+.navbar-menu li a {
+  position: relative;
+  text-decoration: none;
+  color: #1b2e4b;
+  font-weight: 500;
+  padding: 5px 0;
+  transition: color 0.3s ease;
+}
+
+.navbar-menu li a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, #ff4b2b 0%, #ff4b2b 100%);
+  transition: width 0.3s ease;
+}
+
+.navbar-menu li a:hover {
+  color: #ff416c;
+}
+.navbar-menu li a:hover::after {
   width: 100%;
 }
 
-nav ul li.submenu > .submenu-items li a {
-  display: block;
-  padding: 10px 15px;
-  color: #333;
+/* SUBMENU */
+.navbar-submenu {
+  position: relative;
+}
+.navbar-submenu-items {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  flex-direction: column;
+  background: #fff;
+  padding: 12px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.navbar-submenu:hover .navbar-submenu-items {
+  display: flex;
+}
+
+/* HAMBURGUESA */
+.navbar-toggle {
+  display: none;
+  font-size: 1.8em;
+  background: none;
+  border: none;
+  color: #1b2e4b;
+  cursor: pointer;
+}
+
+/* RESPONSIVE */
+@media (max-width: 700px) {
+  .navbar {
+    flex-wrap: wrap;
+    height: auto;
+  }
+
+  .navbar-toggle {
+    display: block;
+  }
+
+   .navbar-menu {
+    display: none; /* arranca oculto */
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    background: #f6f6f6;
+    padding: 15px;
+    border-top: 1px solid #ddd;
+  }
+
+
+  .navbar-menu.open {
+    display: flex;
+  }
+
+  .navbar-submenu-items {
+    position: static;
+    box-shadow: none;
+    padding: 8px 0;
+  }
+}
+
+/* HEADER STICKY */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #f6f6f6;
+  border-bottom: 1px solid #ddd;
+}
+
+/* NAVBAR BASE */
+.navbar {
+  max-width: 1200px;
+  height: 74px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* LOGO */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo {
+  height: 72px;
+}
+.brand-text {
+  font-weight: 700;
+  font-size: 1.22rem;
+  color: #1b2e4b;
+   letter-spacing: 1px;
+}
+
+/* MENU LINKS */
+.navbar-menu {
+  list-style: none;
+  display: flex;
+  gap: 36px;
+}
+
+.navbar-menu li a {
+  position: relative;
   text-decoration: none;
-  transition: background 0.2s;
-}
-
-nav ul li.submenu > .submenu-items li a:hover {
-  background: #f0f0f0;
-  color: #000;
+  color: #1b2e4b;
   font-weight: 500;
+  padding: 5px 0;
+  transition: color 0.3s ease;
 }
 
-/* Mostrar cuando paso el mouse */
-nav ul li.submenu:hover > .submenu-items {
-  display: block;
+.navbar-menu li a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -3px;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%);
+  transition: width 0.3s ease, left 0.3s ease;
+  transform: translateX(-50%);
 }
+
+.navbar-menu li a:hover {
+  color: #ff4b2b;
+}
+
+.navbar-menu li a:hover::after {
+  width: 100%;
+  left: 50%;
+}
+
+/* SUBMENU */
+.navbar-submenu {
+  position: relative;
+}
+
+.navbar-submenu-items {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  flex-direction: column;
+  background: #fff;
+  padding: 8px 0;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  min-width: 160px;
+}
+
+.navbar-submenu:hover .navbar-submenu-items {
+  display: flex;
+}
+
+.navbar-submenu-items li {
+  padding: 6px 16px;
+}
+
+.navbar-submenu-items li a {
+  display: block;
+  width: 100%;
+  color: #1b2e4b;
+  font-weight: 400;
+  position: relative;
+}
+
+.navbar-submenu-items li a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%);
+  transition: width 0.3s ease, left 0.3s ease;
+  transform: translateX(-50%);
+}
+.navbar-submenu-items li a:hover {
+  color: #ff4b2b;
+}
+.navbar-submenu-items li a:hover::after {
+  width: 100%;
+  left: 50%;
+}
+
+/* Quitar puntitos de listas */
+.navbar-menu,
+.navbar-submenu-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* --- FIX hamburguesa: que móvil mande y no lo pisen otros estilos --- */
+@media (max-width: 700px) {
+  .navbar {
+    flex-wrap: wrap;
+    height: auto;
+  }
+
+  .navbar-toggle {
+    display: block;
+  }
+
+  /* Oculto por defecto en móvil */
+    .navbar-menu {
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    background: #f6f6f6;
+    border-top: 1px solid #ddd;
+    
+    /* Animación */
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding: 0 15px;
+    transition: max-height 0.5s ease, opacity 0.4s ease, padding 0.3s ease;
+  }
+
+  .navbar-menu.open {
+    max-height: 400px; /* suficiente para todos los enlaces */
+    opacity: 1;
+    padding: 15px;
+  }
+
+  .navbar-submenu-items {
+    position: static;
+    box-shadow: none;
+    padding: 8px 0;
+  }
+}
+
+
+
+/* Botón hamburguesa base */
+.navbar-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 28px;
+  height: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1100; /* por si tapa el menú */
+}
+
+.navbar-toggle span {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background: #1b2e4b;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+/* Estado abierto (animación hacia X) */
+.navbar-toggle.active span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.navbar-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.navbar-toggle.active span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+@media (max-width: 700px) {
+  .navbar-toggle {
+    display: flex;
+  }
+}
+
 
 /* Banner hero animaciones */
 .mascotas-hero .hero-title {
