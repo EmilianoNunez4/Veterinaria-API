@@ -13,6 +13,7 @@
       align-items: center;
       height: 100vh;
       margin: 0;
+      padding: 20px;
     }
     .container {
       background: #fff;
@@ -125,9 +126,176 @@
     .overlay-right {
       right: 0;
     }
-  </style>
+     /* ====== RESPONSIVE ====== */
+/* ======== MOBILE LOGIN/REGISTER ======== */
+@media (max-width: 768px) {
+  .container {
+    position: relative;
+    width: 95%;
+    max-width: 400px;
+    margin: 40px auto;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
+
+  /* El overlay no se muestra como panel lateral */
+  .overlay-container {
+    display: none;
+  }
+
+  /* Los formularios ocupan todo el ancho */
+  .form-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px 20px;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+  }
+
+  .sign-in-container {
+    z-index: 2;
+  }
+
+  .sign-up-container {
+    opacity: 0;
+    transform: translateY(100%);
+    z-index: 1;
+  }
+
+  /* Cuando está activo el registro */
+  .container.right-panel-active .sign-in-container {
+    opacity: 0;
+    transform: translateY(-100%);
+    z-index: 1;
+  }
+
+  .container.right-panel-active .sign-up-container {
+    opacity: 1;
+    transform: translateY(0);
+    z-index: 2;
+  }
+
+  /* Inputs y botones adaptados */
+  form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 22px;
+  }
+
+  form input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 8px;
+    background: #f0f0f0;
+    font-size: 15px;
+  }
+
+  form button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    border: none;
+    border-radius: 20px;
+    background: #2563eb;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  form button:hover {
+    transform: scale(1.03);
+  }
+}
+
+@media (max-width: 768px) {
+   body {
+     background: linear-gradient(90deg, #2bd1ff 0%, #4193ff 100%);
+  }
+  .mobile-register-btn {
+    margin-top: 15px;
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #2563eb;
+    border-radius: 20px;
+    background: transparent;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-register-btn:hover {
+    background: #2563eb;
+    color: #fff;
+  }
+}
+
+</style>
 </head>
 <body>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const container = document.getElementById("container");
+    const signInForm = container.querySelector(".sign-in-container form");
+
+    // Solo en mobile (pantallas menores a 768px)
+    if (window.innerWidth <= 768) {
+      let btn = document.createElement("button");
+      btn.type = "button";
+      btn.innerText = "¿No tenés cuenta? Registrate";
+      btn.className = "mobile-register-btn";
+
+      // Acción: pasa al formulario de registro
+      btn.addEventListener("click", () => {
+        container.classList.add("right-panel-active");
+      });
+
+      signInForm.appendChild(btn);
+    }
+  });
+</script>
+
+  <script>
+    function toggle(isRegister) {
+  const signUp = document.querySelector(".sign-up-container");
+  const signIn = document.querySelector(".sign-in-container");
+  const container = document.getElementById("container");
+
+  if (window.innerWidth <= 768) {
+    // Mobile: alternar cards
+    if (isRegister) {
+      signIn.classList.remove("active");
+      signUp.classList.add("active");
+    } else {
+      signUp.classList.remove("active");
+      signIn.classList.add("active");
+    }
+  } else {
+    // Desktop: mantener overlay original
+    if (isRegister) {
+      container.classList.add("right-panel-active");
+    } else {
+      container.classList.remove("right-panel-active");
+    }
+  }
+}
+
+// Mostrar login por defecto en mobile
+window.addEventListener("load", () => {
+  if (window.innerWidth <= 768) {
+    document.querySelector(".sign-in-container").classList.add("active");
+  }
+});
+
+  </script>
+  
   <div class="container" id="container">
     <div class="form-container sign-up-container">
       <form onsubmit="register(event)">
