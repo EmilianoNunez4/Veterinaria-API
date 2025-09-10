@@ -36,13 +36,14 @@ $app->group('/usuarios', function (RouteCollectorProxy $group) {
     $group->post('/crear-pimer-admin', \UserController::class . ':CrearAdmin');
     $group->post('/admin', \UserController::class . ':CrearAdmin')->add('AuthJWT:VerificarAdmin');
     $group->get('/todos', \UserController::class . ':ListarUsuarios')->add('AuthJWT::VerificarAdmin');
+    $group->put('/actualizar', \UserController::class . ':ActualizarUsuario')->add('AuthJWT::VerificarToken');
 });     
 
 $app->group('/mascotas', function (RouteCollectorProxy $group) {
     $group->post('/agregar', \MascotaController::class . ':AgregarMascota')->add('AuthJWT::VerificarToken');
     $group->get('/ver-mascotas', \MascotaController::class . ':ListarTodasLasMascotas')->add('AuthJWT::VerificarAdmin');
     $group->get('/mis-mascotas', \MascotaController::class . ':ListarMisMascotas')->add('AuthJWT::VerificarToken');
-    $group->put('/editar/{id}', \MascotaController::class . ':EditarMascota')->add('AuthJWT::VerificarToken');;
+    $group->put('/editar/{id}', \MascotaController::class . ':EditarMascota')->add('AuthJWT::VerificarToken');
 });
 
 $app->group('/turnos', function (RouteCollectorProxy $group) {

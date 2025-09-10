@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi cuenta</title>
+      <link rel="stylesheet" href="mi-cuenta.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="src/logo3-02.png"/>
+</head>    
+<body onload="requireLogin()">
+<script>
+  function requireLogin() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Debes iniciar sesión para acceder.");
+      window.location.href = "login.html";
+    }
+  }
+</script>
+
+  <!-- HEADER -->
+<header class="site-header">
+  <nav class="navbar">
+    <!-- Logo -->
+    <div class="navbar-brand">
+      <img src="src/logovet-Photoroom.png" alt="logo" class="logo">
+      <span class="brand-text">Veterinaria San Jorge</span>
+    </div>
+
+    <!-- Botón hamburguesa -->
+    <button class="navbar-toggle" aria-label="Abrir menú">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <!-- Menú principal -->
+    <ul class="navbar-menu">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="mascotas.html">Mascotas</a></li>
+      <li class="navbar-submenu">
+        <a href="#">Turnos</a>
+        <ul class="navbar-submenu-items">
+          <li><a href="misturnos.html">Ver mis turnos</a></li>
+          <li><a href="turnos.html">Pedir turnos</a></li>
+        </ul>
+      </li>
+      <li><a href="mi-cuenta.html">Mi cuenta</a></li>
+      <li><a id="authLink" href="login.html">Iniciar sesión</a></li>
+    </ul>
+  </nav>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const toggle = document.querySelector(".navbar-toggle");
+  const navMenu = document.querySelector(".navbar-menu");
+
+  toggle.addEventListener("click", () => {
+    navMenu.classList.toggle("open");
+    toggle.classList.toggle("active"); // activa animación del botón
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth >= 700) {
+      navMenu.classList.remove("open");
+      toggle.classList.remove("active");
+    }
+  });
+});
+;
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+
+    // Enlace de autenticación dinámico
+    const authLink = document.getElementById("authLink");
+    if (localStorage.getItem("token")) {
+      authLink.textContent = "Salir";
+      authLink.href = "#";
+      authLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        localStorage.removeItem("token");
+        window.location.href = "index.html";
+      });
+    }
+  });
+</script>
+</header>
+
+  <!-- HERO -->
+  <section class="turnos-hero hero-hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content fadeUp ">
+      <h1 class="hero-title">MI CUENTA</h1>
+      <p class="hero-sub">¡Bienvenido! Aquí puedes gestionar tus datos personales</p>
+      <p class="hero-lead">En esta sección podrás actualizar tu nombre, cambiar tu correo electrónico y modificar tu contraseña de manera segura. 
+      Mantén tu información al día para disfrutar de una mejor experiencia en nuestra veterinaria.
+     </p>
+    </div>
+  </section>
+
+
+<section class="account-container">
+    <h2>Mi Cuenta</h2>
+    <form id="accountForm">
+      <div class="form-group">
+        <label for="nombre">Nombre completo</label>
+        <input type="text" id="nombre" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" required>
+      </div>
+
+      <hr style="margin:20px 0; border: none; border-top: 1px solid #eee;">
+
+      <div class="form-group">
+        <label for="password_actual">Contraseña actual</label>
+        <input type="password" id="password_actual" required>
+        <p class="note">Necesaria para confirmar los cambios</p>
+      </div>
+
+      <div class="form-group">
+        <label for="password_nueva">Nueva contraseña</label>
+        <input type="password" id="password_nueva">
+      </div>
+
+      <div class="form-group">
+        <label for="password_confirmar">Confirmar nueva contraseña</label>
+        <input type="password" id="password_confirmar">
+      </div>
+
+      <button type="submit">Guardar cambios</button>
+    </form>
+  </section>
+
+  <script>
+
+    document.getElementById("accountForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const passNueva = document.getElementById("password_nueva").value;
+      const passConfirma = document.getElementById("password_confirmar").value;
+      if (passNueva && passNueva !== passConfirma) {
+        alert("Las contraseñas nuevas no coinciden");
+        return;
+      }
+
+      const data = {
+        nombre: document.getElementById("nombre").value,
+        email: document.getElementById("email").value,
+        password_actual: document.getElementById("password_actual").value,
+        password_nueva: passNueva
+      };
+
+      try {
+        const res = await fetch("http://localhost/crud/usuarios/actualizar", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("token")
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+          alert("Datos actualizados con éxito");
+        } else {
+          alert(result.error || "Error al actualizar");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error de conexión");
+      }
+    });
+  </script>
+
+  <!-- FOOTER -->
+  <footer class="footer-vet">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <span class="footer-logo"></span>
+        <span class="footer-title">
+          Veterinaria <br> San Jorge
+        </span>
+      </div>
+      <div class="footer-col">
+        <h3>Nosotros</h3>
+        <p>
+          Tu veterinaria de confianza.<br>
+          Atención cálida y personalizada.<br>
+          Experiencia y profesionalismo.<br>
+          ¡Gracias por confiar en nosotros!
+        </p>
+      </div>
+      <div class="footer-col">
+        <h3>Términos y Condiciones</h3>
+        <ul>
+          <li><a href="#">Política de privacidad</a></li>
+          <li><a href="#">Uso del sitio</a></li>
+          <li><a href="#">Turnos y servicios</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Contacto</h3>
+        <ul>
+          <li>+54 11 1234-5678</li>
+          <li>info@veterinaria.com</li>
+          <li>Av. Principal 1234, Buenos Aires</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-copy">
+      © 2025 Veterinaria. Todos los derechos reservados.
+    </div>
+  </footer>
+
+</body>
+</html>

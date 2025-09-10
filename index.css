@@ -851,7 +851,7 @@ body.crossfade-activo .hero-bg {
 }
 
 /* FOOTER (mantengo) */
-.footer-vet { background: linear-gradient(90deg, #0a2449 0%, #103364 100%); color: #ffffff; padding-top: 38px; font-family: 'Segoe UI', Arial, sans-serif; border-top: 2px solid #ffffff; display: flex; flex-direction: column; justify-content: center;}
+.footer-vet { background: linear-gradient(90deg, #0a2449 0%, #103364 100%); color: #ffffff; padding-top: 38px; font-family: 'Segoe UI', Arial, sans-serif; border-top: 2px solid #ffffff; }
 .footer-main { display: flex; gap: 32px; max-width: 1400px; margin: 0 auto; padding: 0 32px 18px 32px; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; }
 .footer-brand { flex: 1 1 180px; display: flex; align-items: center; gap: 8px; font-size: 2em; font-weight: 700; letter-spacing: 2px; color: #ffffff; margin-right: 12px; margin-bottom: 12px; }
 .footer-title { color: #ffffff; font-weight: 700; font-size: 1em; }
@@ -871,7 +871,7 @@ body.crossfade-activo .hero-bg {
   .footer-brand { font-size: 1.5em; }
 }
 @media (max-width: 600px) {
-  .footer-main { padding: 0 2vw 18px 2vw; width: 420px; padding-left: 30px;}
+  .footer-main { padding: 0 2vw 18px 2vw; padding-left: 30px;}
   .footer-col { min-width: unset; }
 }
 

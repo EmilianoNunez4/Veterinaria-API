@@ -484,22 +484,8 @@ header {
   }
 }
 
-/* Reutilizables */
-.btn {
-  display: inline-block;
-  padding: 10px 22px;
-  border-radius: 10px;
-  text-decoration: none;
-  font-weight: 700;
-  cursor: pointer;
-  border: 0;
-  transition: transform .2s, background .18s, opacity .18s;
-}
-.btn:disabled { opacity: .55; cursor: not-allowed; }
-.btn-primary { background: rgb(3, 173, 3); color: #fff; box-shadow: var(--shadow); }
-.btn-primary:hover { transform: translateY(-2px); background:  rgb(76, 198, 76); }
-.btn-outline { background: #fff; color: var(--ink); border: 1px solid #e5e7eb; }
-a.btn { text-align: center; }
+/* SECCION BANNER */
+
 
 /*  HERO / BANNER DE TURNOS */
 .turnos-hero {
@@ -517,7 +503,7 @@ a.btn { text-align: center; }
   content: "";
   position: absolute;
   inset: 0;
-  background: url("src/consultamedica.jpg") center/cover no-repeat;
+  background: url("src/gatito.jpg") center/cover no-repeat;
   z-index: 0;
   transform: scale(1.02);
   transition: transform 10s linear;
@@ -590,210 +576,52 @@ a.btn { text-align: center; }
 
 
 
-/* =========================
-   FORMULARIO DE TURNOS
-   ========================= */
-.turnos-main {
-  max-width: 880px;
-  margin: 38px auto 48px;
-  padding: 0 20px;
-}
-.turnos-container {
-  background: var(--card);
-  border-radius: 16px;
-  box-shadow: var(--shadow);
-  padding: 22px;
-  animation: fadeIn .6s ease;
-  background-color: white;
-}
-.turnos-container h2 {
-  text-align: center;
-  color: var(--ink);
-  margin: 0 0 14px;
-  font-size: 1.9rem;
-}
-.turnos-container p.helper {
-  text-align: center;
-  color: var(--muted);
-  margin: 0 0 18px;
-}
+/* SECCION MI CUENTA */
 
-.turnos-container label {
-  display: block;
-  font-weight: 700;
-  color: rgb(36, 36, 36);
-  margin-top: 12px;
-  margin-bottom: 6px;
-  letter-spacing: .2px;
-}
-.turnos-container input[type="date"],
-.turnos-container select,
-.turnos-container textarea {
-  width: 96%;
-  padding: 11px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 10px;
-  font-size: 1rem;
-  outline: none;
-  transition: border-color .18s, box-shadow .18s;
+.account-container {
+  max-width: 500px;
+  margin: 100px auto;
+  padding: 20px;
   background: #fff;
-  color: gray;
-}
-.turnos-container textarea { min-height: 88px; resize: vertical; }
-.turnos-container input[type="date"]:focus,
-.turnos-container select:focus,
-.turnos-container textarea:focus {
-  border-color: var(--brand);
-  box-shadow: 0 0 0 3px rgba(30,170,214,.15);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* Mensajes de estado */
-.msg {
-  margin-top: 10px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  font-size: .95rem;
-}
-.msg.info { background: #eff6ff; color: #1e40af; }
-.msg.warn { background: #fff7ed; color: #9a3412; }
-.msg.error { background: #fee2e2; color: #991b1b; }
-.msg.ok { background: #e6f9f0; color: #065f46; text-align: center;}
-
-/* =========================
-   HORARIOS DISPONIBLES
-   ========================= */
-.horarios-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 12px;
-}
-.horarios-container .horario {
-  flex: 1 1 120px;
-  min-width: 120px;
-  text-align: center;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 2px solid;
-  border-color: rgb(59, 59, 59);
-  background: #fff;
-  color: rgb(59, 59, 59);
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform .16s, background .18s, color .18s, border-color .18s;
-  user-select: none;
-}
-.horarios-container .horario:hover { background: #293e5b; color: #ffffff; transform: translateY(-1px); }
-.horarios-container .horario.selected { background: rgb(39, 70, 114); color: #fff; border-color: white; }
-.horarios-container .horario[disabled],
-.horarios-container .horario.disabled {
-  opacity: .45; cursor: not-allowed; text-decoration: line-through;
-}
-
-/* Botón Confirmar */
-#btnConfirmar {
-  display: block;
-  width: 100%;
-  margin-top: 16px;
-  padding: 12px;
-  font-size: 1rem;
-  border-radius: 10px;
-}
-
-/* =========================
-   LISTADO: MIS TURNOS
-   ========================= */
-.turnos-listado {
-  max-width: 1100px;
-  margin: 40px auto 70px;
-  padding: 0 20px;
-}
-.turnos-listado h2 {
-  text-align: center;
+.account-container h2 {
   margin-bottom: 20px;
-  color: var(--ink);
-  font-size: 2rem;
+  text-align: center;
 }
 
-.table-turnos {
+.account-container label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+.account-container input {
   width: 100%;
-  border-collapse: collapse;
-  background: var(--card);
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  animation: fadeIn .6s ease;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }
-.table-turnos thead { background: var(--brand); color: #fff; }
-.table-turnos thead th {
-  text-align: left;
-  padding: 14px 12px;
-  font-weight: 700;
-  letter-spacing: .3px;
-  font-size: .95rem;
-}
-.table-turnos tbody tr { border-bottom: 1px solid #eee; transition: background .18s; }
-.table-turnos tbody tr:hover { background: #fafafa; }
-.table-turnos tbody td { padding: 12px; font-size: .95rem; color: #444; }
 
-/* Badges de estado */
-.estado {
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-weight: 800;
-  font-size: .85rem;
-  display: inline-block;
-  line-height: 1.2;
-}
-.estado.pendiente  { background: #fef3c7; color: #92400e; }
-.estado.asistido   { background: #d1fae5; color: #065f46; }
-.estado.ausente    { background: #fee2e2; color: #991b1b; }
-.estado.cancelado  { background: #e5e7eb; color: #374151; }
-
-/* Acciones */
-.btn-accion {
-  padding: 7px 12px;
-  border-radius: 10px;
-  font-size: .86rem;
-  font-weight: 700;
-  border: 0;
+.account-container button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background: rgb(76, 198, 76);
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: transform .16s, filter .18s, background .18s;
-}
-.btn-accion:hover { transform: translateY(-1px); }
-.btn-cancelar { background: #dc2626; color: #fff; }
-.btn-cancelar:hover { filter: brightness(0.95); }
-.btn-reprogramar { background: #2563eb; color: #fff; }
-.btn-reprogramar:hover { filter: brightness(0.95); }
-
-/* =========================
-   UTILIDADES / RESPONSIVE
-   ========================= */
-@keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-
-.hidden { display: none !important; }
-.center { text-align: center; }
-
-@media (max-width: 900px) {
-  .turnos-hero .hero-title { font-size: 2.1rem; }
-  .turnos-hero .hero-lead { font-size: .98rem; }
+  transition: background 0.3s;
 }
 
-@media (max-width: 640px) {
-  .turnos-hero { min-height: 38vh; }
-  .turnos-hero .hero-title { font-size: 1.7rem; }
-  .horarios-container { gap: 8px; }
-  .horarios-container .horario { flex: 1 1 calc(50% - 8px); min-width: unset; }
+.account-container button:hover {
+  background: rgb(76, 198, 76);
 }
-
-/* =========================
-   COMPAT: si usás la clase global .hero-hero
-   para el banner de turnos, aseguramos visibilidad
-   ========================= */
-.hero-hero .hero-overlay { z-index: 1; pointer-events: none; }
-.hero-hero .hero-content { position: relative; z-index: 2; }
-
-
 
 /* FOOTER */
 .footer-vet { background: linear-gradient(90deg, #0a2449 0%, #103364 100%); color: #ffffff; padding-top: 38px; font-family: 'Segoe UI', Arial, sans-serif; border-top: 2px solid #ffffff; }
@@ -819,134 +647,3 @@ a.btn { text-align: center; }
   .footer-main { padding: 0 2vw 18px 2vw; padding-left: 30px;}
   .footer-col { min-width: unset; }
 }
-
-/* MIS TURNOS TABLAS + ESTILOS */
-.turnos-dashboard {
-  padding: 20px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.turno-card {
-  display: flex;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  overflow: hidden;
-  margin-bottom: 18px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.turno-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-}
-
-.turno-fecha {
-  background: linear-gradient(180deg, #76a3c0 , #86aac2 );
-  color: #fff;
-  padding: 15px;
-  text-align: center;
-  min-width: 120px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  font-weight: bold;
-}
-
-.turno-fecha .dia {
-  font-size: 1.6em;
-}
-
-.turno-fecha .mes {
-  font-size: 1em;
-  margin-bottom: 5px;
-}
-
-.turno-fecha .hora {
-  font-size: 0.9em;
-  opacity: 0.9;
-}
-
-.turno-info {
-  flex: 1;
-  padding: 16px 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.turno-info p {
-  margin: 6px 0;
-  font-size: 0.95em;
-  color: #333;
-}
-
-.turno-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 12px;
-}
-
-.btn-cancelar {
-  background: #ffecec;
-  color: #d90429;
-  border: 1px solid #d90429;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.btn-cancelar:hover {
-  background: #d90429;
-  color: #fff;
-}
-
-.turnos-hero1 {
-  position: relative;
-  min-height: 44vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background: #0e223f; /* fallback mientras carga la imagen */
-}
-
-/* Fondo del hero: imagen vía CSS o inline style en el HTML */
-.turnos-hero1::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: url("src/consultorio.jpg") center/cover no-repeat;
-  z-index: 0;
-  transform: scale(1.02);
-  transition: transform 10s linear;
-  will-change: transform;
-}
-
-/* Overlay para contraste */
-.turnos-hero1 .hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(6,26,48,.45);
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* Contenido */
-.turnos-hero1 .hero-content {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  color: #fff;
-  max-width: 960px;
-  padding: 24px;
-}
-.turnos-hero1 .hero-title { font-size: 2.6rem; font-weight: 800; margin: 0 0 8px; letter-spacing: .5px; }
-.turnos-hero1 .hero-sub { font-size: 1.15rem; margin: 0 0 6px; font-weight: 700; opacity: .95; }
-.turnos-hero1 .hero-lead { font-size: 1rem; opacity: .95; margin: 8px auto 16px; max-width: 780px; }
-
-/* Entrada suave del contenido */
-.fadeUp { opacity: 0; transform: translateY(14px); transition: opacity .6s cubic-bezier(.2,.9,.3,1), transform .6s cubic-bezier(.2,.9,.3,1); }
-.fadeUp.show { opacity: 1; transform: translateY(0); }

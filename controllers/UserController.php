@@ -74,4 +74,84 @@ class UserController {
         return $response;
     }
 
+    public static function ActualizarUsuario($request, $response, $args) {
+        $token = $request->getAttribute('jwt');
+
+        if (!$token || !isset($token->email)) {
+            $response->getBody()->write(json_encode(["error" => "Token inválido o no proporcionado."]));
+            return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+        }
+
+        $pdo = Conexion::obtenerConexion();
+
+        // Buscar usuario real en DB por email del token
+        $stmt = $pdo->prepare("SELECT id, password FROM usuarios WHERE email = ?");
+        $stmt->execute([$token->email]);
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$usuario) {
+            $response->getBody()->write(json_encode(["error" => "Usuario no encontrado."]));
+            return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
+        }
+
+        $data = $request->getParsedBody();
+
+        // Validar contraseña actual
+        if (empty($data['password_actual']) || !password_verify($data['password_actual'], $usuario['password'])) {
+            $response->getBody()->write(json_encode(["error" => "Contraseña actual incorrecta."]));
+            return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        }
+
+        // Validar email si lo envía
+        if (!empty($data['email'])) {
+            if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+                $response->getBody()->write(json_encode(["error" => "Formato de email inválido."]));
+                return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+            }
+
+            $stmt = $pdo->prepare("SELECT id FROM usuarios WHERE email = ? AND id != ?");
+            $stmt->execute([$data['email'], $usuario['id']]);
+            if ($stmt->fetch()) {
+                $response->getBody()->write(json_encode(["error" => "El email ya está en uso."]));
+                return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+            }
+        }
+
+        // Armar query dinámicamente
+        $updates = [];
+        $params = [];
+
+        if (!empty($data['nombre'])) {
+            $updates[] = "nombre = ?";
+            $params[] = trim($data['nombre']);
+        }
+
+        if (!empty($data['email'])) {
+            $updates[] = "email = ?";
+            $params[] = strtolower(trim($data['email']));
+        }
+
+        if (!empty($data['password_nueva'])) {
+            if (strlen($data['password_nueva']) < 6) {
+                $response->getBody()->write(json_encode(["error" => "La nueva contraseña debe tener al menos 6 caracteres."]));
+                return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+            }
+            $updates[] = "password = ?";
+            $params[] = password_hash($data['password_nueva'], PASSWORD_DEFAULT);
+        }
+
+        if (!empty($updates)) {
+            $params[] = $usuario['id'];
+            $sql = "UPDATE usuarios SET " . implode(", ", $updates) . " WHERE id = ?";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
+        } else {
+            $response->getBody()->write(json_encode(["mensaje" => "No se realizaron cambios."]));
+            return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+        }
+
+        $response->getBody()->write(json_encode(["mensaje" => "Usuario actualizado con éxito."]));
+        return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+    }
+
 }
