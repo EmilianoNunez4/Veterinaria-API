@@ -10,16 +10,7 @@
 
 </head>
 
-<body onload="requireLogin()">
-<script>
-  function requireLogin() {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("Debes iniciar sesión para acceder.");
-      window.location.href = "login.html";
-    }
-  }
-</script>
+<body>
 
 <header class="site-header">
   <nav class="navbar">
