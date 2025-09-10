@@ -867,7 +867,7 @@ body.crossfade-activo .hero-bg {
 .footer-copy { border-top: 1px solid #ffffff; padding: 20px 0 14px 0; text-align: center; color: #ffffff; font-size: 1.05em; background: linear-gradient(90deg, #0a2449 0%, #103364 100%); }
 
 @media (max-width: 900px) {
-  .footer-main { flex-direction: column; align-items: flex-start; gap: 20px; padding: 0 10px 18px 10px; }
+  .footer-main { align-items: flex-start; gap: 20px; padding: 0 10px 18px 10px; }
   .footer-brand { font-size: 1.5em; }
 }
 @media (max-width: 600px) {
@@ -877,4 +877,35 @@ body.crossfade-activo .hero-bg {
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Carrusel en mobile tipo swipe */
+@media (max-width: 700px) {
+  .svc-carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 20px;
+    padding: 20px;
+    scroll-behavior: smooth;
+  }
+
+  .svc-card {
+    flex: 0 0 80%;                /* ocupa 80% del ancho */
+    scroll-snap-align: center;    /* centra cada card */
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+
+  .svc-card.active {
+    transform: scale(1);          /* la card activa más grande */
+    opacity: 1;
+  }
+
+  /* Ocultamos flechas en mobile */
+  .svc-arrow {
+    display: none;
+  }
 }

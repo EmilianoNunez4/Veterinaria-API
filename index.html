@@ -214,6 +214,39 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 </script>
 
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const carousel = document.querySelector(".svc-carousel");
+  const cards = document.querySelectorAll(".svc-card");
+
+  function updateActiveCard() {
+    let closestCard = null;
+    let closestOffset = Infinity;
+
+    cards.forEach(card => {
+      const rect = card.getBoundingClientRect();
+      const offset = Math.abs(rect.left + rect.width / 2 - window.innerWidth / 2);
+
+      if (offset < closestOffset) {
+        closestOffset = offset;
+        closestCard = card;
+      }
+    });
+
+    cards.forEach(card => card.classList.remove("active"));
+    if (closestCard) closestCard.classList.add("active");
+  }
+
+  carousel.addEventListener("scroll", () => {
+    requestAnimationFrame(updateActiveCard);
+  });
+
+  // Inicializar al cargar
+  updateActiveCard();
+});
+</script>
+
   <!-- SERVICIOS -->
 <section id="servicios-carousel" class="svc-section">
   <div class="svc-container">
@@ -223,6 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <button class="svc-arrow prev" aria-label="Anterior" type="button">◀</button>
 
       <div class="svc-carousel" role="list" aria-live="polite">
+        
         <!-- Card 1 -->
         <article class="svc-card" role="listitem">
           <div class="svc-image" style="background-image:url('src/consultamedic.jpg')">
