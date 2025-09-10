@@ -113,39 +113,6 @@ header {
   cursor: pointer;
 }
 
-/* RESPONSIVE */
-@media (max-width: 700px) {
-  .navbar {
-    flex-wrap: wrap;
-    height: auto;
-  }
-
-  .navbar-toggle {
-    display: block;
-  }
-
-   .navbar-menu {
-    display: none; /* arranca oculto */
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-    background: #f6f6f6;
-    padding: 15px;
-    border-top: 1px solid #ddd;
-  }
-
-
-  .navbar-menu.open {
-    display: flex;
-  }
-
-  .navbar-submenu-items {
-    position: static;
-    box-shadow: none;
-    padding: 8px 0;
-  }
-}
-
 /* HEADER STICKY */
 .site-header {
   position: sticky;
@@ -279,19 +246,41 @@ header {
   margin: 0;
   padding: 0;
 }
+
+/* Evitar scroll horizontal en móvil */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Asegurar que las secciones ocupen solo el ancho disponible */
+section {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Imágenes responsivas */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
 /* --- FIX hamburguesa: que móvil mande y no lo pisen otros estilos --- */
 @media (max-width: 700px) {
   .navbar {
     flex-wrap: wrap;
     height: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
   }
 
   .navbar-toggle {
     display: block;
   }
 
-  /* Oculto por defecto en móvil */
-    .navbar-menu {
+  .navbar-menu {
     flex-direction: column;
     gap: 15px;
     width: 100%;
@@ -307,7 +296,7 @@ header {
   }
 
   .navbar-menu.open {
-    max-height: 400px; /* suficiente para todos los enlaces */
+    max-height: 400px; 
     opacity: 1;
     padding: 15px;
   }
@@ -318,8 +307,6 @@ header {
     padding: 8px 0;
   }
 }
-
-
 
 /* Botón hamburguesa base */
 .navbar-toggle {

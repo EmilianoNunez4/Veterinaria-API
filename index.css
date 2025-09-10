@@ -159,6 +159,7 @@ header {
   align-items: center;
 }
 
+
 /* LOGO */
 .navbar-brand {
   display: flex;
@@ -354,6 +355,24 @@ header {
   }
 }
 
+/* Evitar scroll horizontal en móvil */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Asegurar que las secciones ocupen solo el ancho disponible */
+section {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Imágenes responsivas */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
 
 
 /* ================= HERO / BANNER PRINCIPAL ================= */
